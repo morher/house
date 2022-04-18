@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.morher.house</groupId>
+		<artifactId>house</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<name>House Adapters</name>
+	<artifactId>house-adapters</artifactId>
+	<packaging>pom</packaging>
+
+	<description>Parent for adapter implementations</description>
+
+	<modules>
+	</modules>
+
+	<properties>
+		<docker.path>docker.honu.city/house</docker.path>
+		<docker.name>${project.artifactId}</docker.name>
+	</properties>
+
+	<dependencies>
+		<!-- House dependencies -->
+		<dependency>
+			<groupId>net.morher.house</groupId>
+			<artifactId>house-api</artifactId>
+		</dependency>
+
+		<!-- Runtime dependences -->
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>jib-maven-plugin</artifactId>
+					<version>${jib-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>build</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<to>
+							<image>${docker.path}/${docker.name}</image>
+						</to>
+						<container>
+							<workingDirectory>/config</workingDirectory>
+						</container>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>${mainClass}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
