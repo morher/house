@@ -16,6 +16,7 @@
 	<description>Parent for adapter implementations</description>
 
 	<modules>
+		<module>modes-adapter</module>
 	</modules>
 
 	<properties>

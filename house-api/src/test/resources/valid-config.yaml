@@ -1,0 +1,6 @@
+
+# Expected field
+testField: This is just a test
+
+# Ignored field
+ignoredField: Oh well...

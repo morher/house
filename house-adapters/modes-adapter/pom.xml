@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.morher.house</groupId>
+		<artifactId>house-adapters</artifactId>	
+		<version>${revision}</version>
+	</parent>
+
+	<name>Modes Adapter</name>
+	<artifactId>modes-adapter</artifactId>
+	<packaging>jar</packaging>
+
+	<description>Creates virtual devices to set states such as guest mode, vacation mode, etc.</description>
+
+	<properties>
+		<mainClass>net.morher.house.modes.ModesAdapter</mainClass>
+	</properties>
+
+	<build>
+		<finalName>house-modes-adapter</finalName>
+		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
