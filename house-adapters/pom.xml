@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>modes-adapter</module>
+		<module>wizlight-adapter</module>
 	</modules>
 
 	<properties>

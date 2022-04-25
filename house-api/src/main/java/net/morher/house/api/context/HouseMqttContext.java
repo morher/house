@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import net.morher.house.api.config.ConfigurationLoader;
 import net.morher.house.api.config.MqttConfiguration;
+import net.morher.house.api.device.DeviceManager;
 import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.hass.HomeAssistantAutoDiscoveryController;
 import net.morher.house.api.mqtt.MqttNamespace;
@@ -22,6 +23,8 @@ public class HouseMqttContext {
     private HouseMqttClient client;
     private HomeAssistantAutoDiscoveryController hass;
     private EntityManager entityManager;
+
+    private DeviceManager deviceManager;
 
     public static MqttOptions loadDefaultOptions(String adapterName) {
         MqttConfiguration config = new ConfigurationLoader(configFile(ENV_CONFIG_MQTT, "mqtt-client.yaml").toString())
@@ -65,6 +68,13 @@ public class HouseMqttContext {
             entityManager.entityChanges().subscribe(homeAssistantAutoDiscoveryController());
         }
         return entityManager;
+    }
+
+    public DeviceManager deviceManager() {
+        if (deviceManager == null) {
+            deviceManager = new DeviceManager(entityManager());
+        }
+        return deviceManager;
     }
 
     public <T> T loadAdapterConfig(Class<T> configType) {

@@ -236,36 +236,6 @@ public class HouseMqttClientImpl implements HouseMqttClient {
         }
     }
 
-    public static class Message {
-        private final String topic;
-        private final byte[] payload;
-        private final int qos;
-        private final boolean retain;
-
-        public Message(String topic, byte[] payload, int qos, boolean retain) {
-            this.topic = topic;
-            this.payload = payload;
-            this.qos = qos;
-            this.retain = retain;
-        }
-
-        public String getTopic() {
-            return topic;
-        }
-
-        public byte[] getPayload() {
-            return payload;
-        }
-
-        public int getQos() {
-            return qos;
-        }
-
-        public boolean isRetain() {
-            return retain;
-        }
-    }
-
     private class TopicSubscription {
         private final String topicFilter;
         private final List<MqttMessageListener> listeners = new ArrayList<>();

@@ -1,5 +1,6 @@
 package net.morher.house.api.entity;
 
+import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.subscription.SubscriptionRegistry;
@@ -11,6 +12,10 @@ public class EntityManager {
 
     public EntityManager(HouseMqttClient client) {
         this.client = client;
+    }
+
+    public LightEntity lightEntity(EntityId entityId) {
+        return new LightEntity(client, entityId, entityChanges.getDispatcher());
     }
 
     public SwitchEntity switchEntity(EntityId entityId) {
