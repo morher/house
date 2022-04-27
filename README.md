@@ -20,4 +20,5 @@ Adapters implement the functionality behind devices and entities, reacting to co
 | [Buttons](./house-adapters/buttons-adapter/) | Handles button input like light switches etc.                                                       |
 | [Modes](./house-adapters/modes-adapter/)     | Creates virtual devices to set states such as guest mode, vacation mode, etc.                       |
 | [Wiz](./house-adapters/wizlight-adapter/)    | Control light bulbs from [WiZ](https://www.wizconnected.com/en-gb) through the local UDP interface. |
+| [Wled](./house-adapters/wled-adapter/)       | Control [WLED](https://kno.wled.ge/) managed LED strips.                                            |
 

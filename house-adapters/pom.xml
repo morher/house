@@ -19,6 +19,7 @@
 		<module>buttons-adapter</module>
 		<module>modes-adapter</module>
 		<module>wizlight-adapter</module>
+		<module>wled-adapter</module>
 	</modules>
 
 	<properties>

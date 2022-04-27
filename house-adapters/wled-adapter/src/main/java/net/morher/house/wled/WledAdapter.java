@@ -1,0 +1,23 @@
+package net.morher.house.wled;
+
+import net.morher.house.api.context.HouseAdapter;
+import net.morher.house.api.context.HouseMqttContext;
+import net.morher.house.api.mqtt.client.HouseMqttClient;
+import net.morher.house.wled.config.WledAdapterConfiguration;
+import net.morher.house.wled.frontend.WledFrontendServer;
+
+public class WledAdapter implements HouseAdapter {
+
+    public static void main(String[] args) throws Exception {
+        new WledAdapter().run(new HouseMqttContext("wled-adapter"));
+    }
+
+    @Override
+    public void run(HouseMqttContext ctx) {
+        HouseMqttClient client = ctx.client();
+
+        WledControllerImpl wled = new WledControllerImpl(client, ctx.deviceManager());
+        wled.configure(ctx.loadAdapterConfig(WledAdapterConfiguration.class).getWled());
+    }
+
+}
