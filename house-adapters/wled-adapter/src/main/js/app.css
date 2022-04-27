@@ -1,0 +1,26 @@
+
+.palette, .effect {
+    position: relative;
+    width: 10em;
+}
+
+.effects,
+.palettes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5em;
+}
+
+.palette-preview {
+    background: transaction;
+    height: .2em;
+    position: absolute;
+    bottom: .1em;
+    left: .1em;
+    right: .1em;
+    border-radius: .1em;
+}
+

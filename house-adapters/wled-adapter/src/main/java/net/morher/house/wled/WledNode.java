@@ -41,6 +41,8 @@ public class WledNode {
                 || state.getColor3() != null) {
             int[][] colors = new int[3][];
             colors[0] = createColorArray(state.getColor1());
+            colors[1] = createColorArray(state.getColor2());
+            colors[2] = createColorArray(state.getColor3());
             return colors;
         }
         return null;

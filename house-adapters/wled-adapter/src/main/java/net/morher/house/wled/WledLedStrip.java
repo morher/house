@@ -15,6 +15,7 @@ import net.morher.house.wled.presets.Preset;
 import net.morher.house.wled.presets.PresetManager;
 
 public class WledLedStrip {
+    private static final String CUSTOM_PRESET = "Custom";
     private final String id;
     private final DeviceId deviceId;
     private final WledNode node;
@@ -41,6 +42,7 @@ public class WledLedStrip {
         deviceInfo.setManufacturer("Wled");
         this.handler = new LightStateHandler(lightEntity, deviceInfo, this::onLampState);
         List<String> effects = presets.getLedStripPresets(id).stream().map(Preset::getName).collect(toList());
+        effects.add(CUSTOM_PRESET);
         handler.updateOptions(new LightOptions(true, effects));
     }
 
@@ -59,15 +61,24 @@ public class WledLedStrip {
         if (updatedState.getBrightness() != null) {
             state.setBrightness(updatedState.getBrightness());
         }
-        Preset preset = getPreset(updatedState.getEffect());
-        if (preset != null) {
-            state.apply(preset.getState(), true);
+        if (CUSTOM_PRESET.equals(updatedState.getEffect())) {
+            state.apply(state, false);
+        } else {
+            Preset preset = getPreset(updatedState.getEffect());
+            if (preset != null) {
+                state.apply(preset.getState(), true);
+            }
         }
         node.updateSegment(segmentId, state);
     }
 
     public LedStripState getState() {
         return state;
+    }
+
+    public void setState(LedStripState state) {
+        this.state = state;
+        node.updateSegment(segmentId, state);
     }
 
     private Preset getPreset(String presetId) {

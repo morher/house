@@ -28,6 +28,10 @@ public class LedColor {
         return color.getGreen();
     }
 
+    public int[] toArray() {
+        return new int[] { getRed(), getGreen(), getBlue() };
+    }
+
     @Override
     @JsonValue
     public String toString() {

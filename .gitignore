@@ -165,3 +165,6 @@ $RECYCLE.BIN/
 
 .flattened-pom.xml
 .vscode/
+/house-adapters/wled-adapter/node/
+node_modules/
+/house-adapters/wled-adapter/package-lock.json

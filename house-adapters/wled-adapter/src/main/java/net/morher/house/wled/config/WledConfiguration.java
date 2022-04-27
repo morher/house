@@ -13,6 +13,7 @@ import net.morher.house.wled.LedColor;
 public class WledConfiguration {
     private List<WledLampConfig> lamps = new ArrayList<>();
     private Map<String, WledPresetConfig> presets = new HashMap<>();
+    private List<WledUserConfig> users = new ArrayList<>();
 
     @Data
     public static class WledLampConfig {
@@ -34,5 +35,11 @@ public class WledConfiguration {
         private Integer intensity;
         private Integer speed;
         private Integer effect;
+    }
+
+    @Data
+    public static class WledUserConfig {
+        private String id;
+        private String password;
     }
 }
