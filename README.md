@@ -15,8 +15,9 @@ The entity types are set up to line up with the entity types in Home Assistant.
 ## Adapters
 Adapters implement the functionality behind devices and entities, reacting to commands and reporting sensor data.
 
-| Adapter                                   | Description                                                                                         |
-|-------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| [Modes](./house-adapters/modes-adapter/)  | Creates virtual devices to set states such as guest mode, vacation mode, etc.                       |
-| [Wiz](./house-adapters/wizlight-adapter/) | Control light bulbs from [WiZ](https://www.wizconnected.com/en-gb) through the local UDP interface. |
+| Adapter                                      | Description                                                                                         |
+|----------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| [Buttons](./house-adapters/buttons-adapter/) | Handles button input like light switches etc.                                                       |
+| [Modes](./house-adapters/modes-adapter/)     | Creates virtual devices to set states such as guest mode, vacation mode, etc.                       |
+| [Wiz](./house-adapters/wizlight-adapter/)    | Control light bulbs from [WiZ](https://www.wizconnected.com/en-gb) through the local UDP interface. |
 

@@ -16,6 +16,7 @@
 	<description>Parent for adapter implementations</description>
 
 	<modules>
+		<module>buttons-adapter</module>
 		<module>modes-adapter</module>
 		<module>wizlight-adapter</module>
 	</modules>
@@ -30,6 +31,12 @@
 		<dependency>
 			<groupId>net.morher.house</groupId>
 			<artifactId>house-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.morher.house</groupId>
+			<artifactId>house-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- Runtime dependences -->

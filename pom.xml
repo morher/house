@@ -52,6 +52,7 @@
 	<modules>
 		<module>house-api</module>
 		<module>house-adapters</module>
+		<module>house-test</module>
 	</modules>
 
 	<dependencies>
@@ -95,6 +96,12 @@
 			<dependency>
 				<groupId>net.morher.house</groupId>
 				<artifactId>house-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>	
+
+			<dependency>
+				<groupId>net.morher.house</groupId>
+				<artifactId>house-test</artifactId>
 				<version>${project.version}</version>
 			</dependency>	
 
