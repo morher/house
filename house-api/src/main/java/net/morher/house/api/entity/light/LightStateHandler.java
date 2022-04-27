@@ -19,6 +19,7 @@ public class LightStateHandler {
                 .subscribe(this::handleCommandReceived);
         this.stateSubscription = lightEntity.state()
                 .subscribe(this::handleStateReceived);
+        this.lightEntity.setDeviceInfo(deviceInfo);
     }
 
     public void updateOptions(LightOptions options) {

@@ -14,6 +14,7 @@ public class HomeAssistantAutoDiscoveryController implements EntityListener {
 
     public HomeAssistantAutoDiscoveryController(HouseMqttClient mqtt) {
         announcers.add(new SwitchEntityAnnouncer(mqtt));
+        announcers.add(new LightEntityAnnouncer(mqtt));
     }
 
     @Override
