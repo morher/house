@@ -1,7 +1,7 @@
 package net.morher.house.buttons.action;
 
-import net.morher.house.api.entity.EntityStateListener;
-import net.morher.house.api.entity.StatefullEntity;
+import net.morher.house.api.entity.common.EntityStateListener;
+import net.morher.house.api.entity.common.StatefullEntity;
 import net.morher.house.api.entity.light.LightState;
 
 public class LightCondition implements Condition, EntityStateListener<LightState> {

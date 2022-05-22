@@ -1,4 +1,4 @@
-package net.morher.house.api.device;
+package net.morher.house.api.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

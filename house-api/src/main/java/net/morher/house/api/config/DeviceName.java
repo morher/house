@@ -3,7 +3,7 @@ package net.morher.house.api.config;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 
 @NoArgsConstructor
 @AllArgsConstructor

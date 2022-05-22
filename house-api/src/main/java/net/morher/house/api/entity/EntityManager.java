@@ -14,6 +14,10 @@ public class EntityManager {
         this.client = client;
     }
 
+    public <E extends Entity> E entity(DeviceId device, EntityDefinition<E> entityDefinition) {
+        return entityDefinition.createEntity(this, device);
+    }
+
     public LightEntity lightEntity(EntityId entityId) {
         return new LightEntity(client, entityId, entityChanges.getDispatcher());
     }

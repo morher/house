@@ -14,10 +14,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceManager;
-import net.morher.house.api.entity.CommandableEntity;
+import net.morher.house.api.devicetypes.GeneralDevice;
+import net.morher.house.api.devicetypes.LampDevice;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.entity.EntityManager;
+import net.morher.house.api.entity.common.CommandableEntity;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.light.LightState;
 import net.morher.house.api.entity.light.LightState.PowerState;
@@ -30,12 +32,12 @@ public class ActionBuilderTest {
     private DeviceManager deviceManager = new DeviceManager(new EntityManager(TestHouseMqttClient.loopback()));
 
     LightEntity livingRoomMoodLamp = deviceManager
-            .lightDevice(new DeviceId("Living room", "Mood lamp"))
-            .getMainEntity();
+            .device(new DeviceId("Living room", "Mood lamp"))
+            .entity(LampDevice.LIGHT);
 
     SwitchEntity kitchenMixerSwitch = deviceManager
-            .switchDevice(new DeviceId("Kitchen", "Mixer"))
-            .getMainEntity();
+            .device(new DeviceId("Kitchen", "Mixer"))
+            .entity(GeneralDevice.POWER);
 
     @Test
     public void testLightAction() {
@@ -58,8 +60,8 @@ public class ActionBuilderTest {
         List<Boolean> commands = commandCollector(kitchenMixerSwitch);
 
         buildAction("""
-                switch:
-                   power: ON
+                power:
+                   state: ON
                 """)
                 .perform();
 
@@ -108,7 +110,7 @@ public class ActionBuilderTest {
         buildAction("""
                 firstMatch:
                  - condition:
-                      switch:
+                      power:
                          power: Off
                    action:
                     - light:

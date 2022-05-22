@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
-import net.morher.house.api.device.Device;
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceManager;
+import net.morher.house.api.devicetypes.LampDevice;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttTopicManager;
@@ -43,10 +43,10 @@ public class WledControllerImpl {
             String id = lampConfig.getId();
 
             DeviceId deviceId = lampConfig.getDevice().toDeviceId();
-            Device<LightEntity> lamp = deviceManager.lightDevice(deviceId);
+            LightEntity lightEntity = deviceManager.device(deviceId).entity(LampDevice.LIGHT);
 
             WledNode node = findOrCreateNode(lampConfig.getTopic());
-            WledLedStrip strip = new WledLedStrip(id, deviceId, node, lampConfig.getSegment(), lamp.getMainEntity(), presets);
+            WledLedStrip strip = new WledLedStrip(id, deviceId, node, lampConfig.getSegment(), lightEntity, presets);
 
             strips.put(id, strip);
         }

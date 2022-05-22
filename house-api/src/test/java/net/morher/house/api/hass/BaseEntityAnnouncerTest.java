@@ -14,11 +14,11 @@ import org.mockito.ArgumentCaptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceInfo;
-import net.morher.house.api.entity.ConfigurableEntity;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.EntityId;
-import net.morher.house.api.entity.EntityOptions;
+import net.morher.house.api.entity.common.ConfigurableEntity;
+import net.morher.house.api.entity.common.EntityOptions;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 
 public class BaseEntityAnnouncerTest {

@@ -1,6 +1,6 @@
 package net.morher.house.wled.frontend;
 
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 import net.morher.house.wled.WledLedStrip;
 
 public class WledStripTO {

@@ -1,7 +1,7 @@
 # House
 Tools for home automation.
 
-House consists of common tools to create adapters between hardware and MQTT throuh common patterns and convensions. Adapters expose devices to MQTT through one or more entities. The device is identified by a room name and the name of the device itself. An entity is identified by it's device and an optional entity name. There can only be one entity without a specified name. It is refered to as the devices main entity. named entities are sub-entities that controls additional states or reports aspect of the device like battery level or signal strenth.
+House consists of common tools to create adapters between hardware and MQTT through common patterns and conventions. Adapters expose devices to MQTT through one or more entities. The device is identified by a room name and the name of the device itself. An entity is identified by it's device and an entity name. The entities can control the primary functions of the device as well as additional states or report aspect of the device like battery level or signal strength.
 
 ## Entities
 The entity types are set up to line up with the entity types in Home Assistant. 

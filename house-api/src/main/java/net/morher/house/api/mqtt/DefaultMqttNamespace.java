@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNullElse;
 import static net.morher.house.api.mqtt.MqttNamespace.normalize;
 
 import lombok.AllArgsConstructor;
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.EntityId;
 
 @AllArgsConstructor

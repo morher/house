@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import net.morher.house.api.device.DeviceId;
 
 @RequiredArgsConstructor
 @Getter

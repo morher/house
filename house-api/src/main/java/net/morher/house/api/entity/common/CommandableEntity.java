@@ -1,5 +1,7 @@
-package net.morher.house.api.entity;
+package net.morher.house.api.entity.common;
 
+import net.morher.house.api.entity.EntityId;
+import net.morher.house.api.entity.EntityListener;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttTopicManager;
 import net.morher.house.api.mqtt.payload.PayloadFormat;

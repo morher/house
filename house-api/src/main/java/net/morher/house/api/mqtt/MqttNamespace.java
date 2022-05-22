@@ -3,7 +3,7 @@ package net.morher.house.api.mqtt;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.EntityId;
 
 public interface MqttNamespace {

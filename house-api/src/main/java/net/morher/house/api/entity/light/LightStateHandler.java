@@ -1,7 +1,7 @@
 package net.morher.house.api.entity.light;
 
-import net.morher.house.api.device.DeviceInfo;
-import net.morher.house.api.entity.EntityStateListener;
+import net.morher.house.api.entity.DeviceInfo;
+import net.morher.house.api.entity.common.EntityStateListener;
 import net.morher.house.api.subscription.Subscription;
 
 public class LightStateHandler {

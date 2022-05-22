@@ -21,7 +21,6 @@ public class ModesAdapterConfiguration {
     @Data
     public static class ModeDeviceConfiguration {
         private DeviceName device;
-        private ModeEntityConfiguration mainEntity;
         private Map<String, ModeEntityConfiguration> entities = new HashMap<>();
         private String manufacturer = "House";
         private String model = "Modes";

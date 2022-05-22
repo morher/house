@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.morher.house.api.config.DeviceName;
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 
 public class DeviceDefaults {
     private final List<DeviceName> defaultDevices;

@@ -1,43 +1,23 @@
-package net.morher.house.api.device;
+package net.morher.house.api.entity;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Data;
-import net.morher.house.api.entity.Entity;
-import net.morher.house.api.entity.EntityId;
-import net.morher.house.api.entity.EntityManager;
 
-public class Device<M extends Entity> {
+public class Device {
     private final EntityManager entityManager;
     private final DeviceId deviceId;
-    private final M mainEntity;
 
     private final Map<String, SubEntityEntry<?>> entities = new HashMap<>();
 
     public Device(EntityManager entityManager, DeviceId deviceId) {
         this.entityManager = entityManager;
         this.deviceId = deviceId;
-        this.mainEntity = null;
-    }
-
-    public Device(
-            EntityManager entityManager,
-            DeviceId deviceId,
-            EntityFactory<? extends M> entityFactory) {
-
-        this.entityManager = entityManager;
-        this.deviceId = deviceId;
-        this.mainEntity = entityFactory
-                .createEntity(entityManager, new EntityId(deviceId, null));
-    }
-
-    public M getMainEntity() {
-        return mainEntity;
     }
 
     @SuppressWarnings("unchecked")
-    public <E extends Entity> E getEntity(EntityDefinition<E> entityDefinition) {
+    public <E extends Entity> E entity(EntityDefinition<E> entityDefinition) {
         SubEntityEntry<?> entry = entities.get(entityDefinition.getEntityName());
         if (entry != null) {
             if (!entry.getEntityDefinition().equals(entityDefinition)) {

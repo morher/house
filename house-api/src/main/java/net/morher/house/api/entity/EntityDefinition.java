@@ -1,9 +1,6 @@
-package net.morher.house.api.device;
+package net.morher.house.api.entity;
 
 import lombok.Data;
-import net.morher.house.api.entity.Entity;
-import net.morher.house.api.entity.EntityId;
-import net.morher.house.api.entity.EntityManager;
 
 @Data
 public class EntityDefinition<E extends Entity> {

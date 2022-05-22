@@ -2,8 +2,8 @@ package net.morher.house.buttons.action;
 
 import java.util.Objects;
 
-import net.morher.house.api.entity.EntityStateListener;
-import net.morher.house.api.entity.StatefullEntity;
+import net.morher.house.api.entity.common.EntityStateListener;
+import net.morher.house.api.entity.common.StatefullEntity;
 
 public class EntityStateCondition<T> implements Condition, EntityStateListener<T> {
     private final T conditionState;

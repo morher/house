@@ -3,8 +3,6 @@ package net.morher.house.buttons.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,8 +14,8 @@ import net.morher.house.api.config.DeviceName;
 public class ActionConfig {
     private List<ConditionalActionConfig> firstMatch;
     private LightConfig light;
-    @JsonProperty("switch")
-    private SwitchConfig switchCommand;
+    private SwitchConfig power;
+    private SwitchConfig enable;
 
     @Data
     public static class ConditionalActionConfig {
@@ -31,8 +29,8 @@ public class ActionConfig {
         private List<ConditionConfig> anyOf;
         private ConditionConfig not;
         private LightConfig light;
-        @JsonProperty("switch")
-        private SwitchConfig switchCondition;
+        private SwitchConfig power;
+        private SwitchConfig enable;
     }
 
     @Data
@@ -57,6 +55,6 @@ public class ActionConfig {
     public static class SwitchConfig {
         private final List<String> refs = new ArrayList<>();
         private final List<DeviceName> switches = new ArrayList<>();
-        private boolean power;
+        private boolean state;
     }
 }

@@ -2,7 +2,7 @@ package net.morher.house.buttons;
 
 import net.morher.house.api.context.HouseAdapter;
 import net.morher.house.api.context.HouseMqttContext;
-import net.morher.house.api.device.DeviceManager;
+import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.buttons.config.ButtonsAdapterConfiguration;
 import net.morher.house.buttons.pattern.ButtonManager;

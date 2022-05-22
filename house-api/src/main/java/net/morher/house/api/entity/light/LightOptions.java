@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import net.morher.house.api.entity.EntityOptions;
+import net.morher.house.api.entity.common.EntityOptions;
 
 @Data
 @With

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.junit.Test;
 
 import net.morher.house.api.config.DeviceName;
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.EntityId;
 import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.switches.SwitchEntity;
@@ -26,7 +26,7 @@ import net.morher.house.modes.ModesAdapterConfiguration.ModesConfiguration;
 public class ModesControllerTest {
 
     private static final DeviceId DEVICE_ID = new DeviceId("room", "device");
-    private static final EntityId ENTITY_ID_MAIN = new EntityId(DEVICE_ID, null);
+    private static final EntityId ENTITY_ID_ENABLE = new EntityId(DEVICE_ID, "enable");
 
     @Test
     public void testCreateDeviceWithSwitchAsMain() {
@@ -34,9 +34,9 @@ public class ModesControllerTest {
         HouseMqttClient client = mock(HouseMqttClient.class);
         doReturn(MqttNamespace.defaultNamespace()).when(client).getNamespace();
 
-        SwitchEntity switchEntity = new SwitchEntity(client, ENTITY_ID_MAIN, null);
+        SwitchEntity switchEntity = new SwitchEntity(client, ENTITY_ID_ENABLE, null);
 
-        doReturn(switchEntity).when(entityManager).switchEntity(eq(ENTITY_ID_MAIN));
+        doReturn(switchEntity).when(entityManager).switchEntity(eq(ENTITY_ID_ENABLE));
 
         ModesController controller = new ModesController(entityManager);
         ModesConfiguration config = new ModesConfiguration();
@@ -44,15 +44,15 @@ public class ModesControllerTest {
         devConfig.setDevice(new DeviceName("room", "device"));
         ModeEntityConfiguration entityConfig = new ModeEntityConfiguration();
         entityConfig.setType("switch");
-        devConfig.setMainEntity(entityConfig);
+        devConfig.getEntities().put("enable", entityConfig);
         config.getDevices().add(devConfig);
 
         controller.configure(config);
 
-        verify(entityManager).switchEntity(eq(ENTITY_ID_MAIN));
+        verify(entityManager).switchEntity(eq(ENTITY_ID_ENABLE));
         verify(client, atLeastOnce()).getNamespace();
-        verify(client).subscribe(eq("house/room/device"), any(MqttMessageListener.class));
-        verify(client, times(1)).subscribe(eq("house/room/device/command"), any(MqttMessageListener.class));
+        verify(client).subscribe(eq("house/room/device/enable"), any(MqttMessageListener.class));
+        verify(client, times(1)).subscribe(eq("house/room/device/enable/command"), any(MqttMessageListener.class));
         verifyNoMoreInteractions(client);
     }
 }

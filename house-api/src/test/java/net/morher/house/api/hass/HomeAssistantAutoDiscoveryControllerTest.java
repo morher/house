@@ -13,8 +13,8 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceInfo;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.EntityId;
 import net.morher.house.api.entity.switches.SwitchEntity;
 import net.morher.house.api.entity.switches.SwitchOptions;

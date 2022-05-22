@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceInfo;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.light.LightOptions;
 import net.morher.house.api.entity.light.LightState;

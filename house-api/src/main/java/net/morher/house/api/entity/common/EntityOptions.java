@@ -1,4 +1,4 @@
-package net.morher.house.api.entity;
+package net.morher.house.api.entity.common;
 
 import lombok.Data;
 

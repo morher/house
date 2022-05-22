@@ -1,7 +1,5 @@
 package net.morher.house.api.entity;
 
-import net.morher.house.api.device.DeviceInfo;
-
 public class Entity {
 
     protected final EntityId id;

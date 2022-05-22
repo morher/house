@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import net.morher.house.api.config.ConfigurationLoader;
 import net.morher.house.api.config.MqttConfiguration;
-import net.morher.house.api.device.DeviceManager;
+import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.hass.HomeAssistantAutoDiscoveryController;
 import net.morher.house.api.mqtt.MqttNamespace;

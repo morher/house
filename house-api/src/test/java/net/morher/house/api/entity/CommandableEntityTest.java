@@ -13,7 +13,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.common.CommandableEntity;
+import net.morher.house.api.entity.common.EntityCommandListener;
+import net.morher.house.api.entity.common.EntityOptions;
 import net.morher.house.api.mqtt.MqttNamespace;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;

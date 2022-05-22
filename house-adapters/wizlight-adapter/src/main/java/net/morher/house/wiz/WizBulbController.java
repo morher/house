@@ -11,10 +11,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import net.morher.house.api.device.Device;
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceInfo;
-import net.morher.house.api.device.DeviceManager;
+import net.morher.house.api.devicetypes.LampDevice;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceInfo;
+import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.light.LightOptions;
 import net.morher.house.api.entity.light.LightState;
@@ -56,12 +56,12 @@ public class WizBulbController {
     private void configureLamp(WizSection.LampConfiguration lampConfig, List<String> effects) {
         DeviceId deviceId = lampConfig.getDevice().toDeviceId();
 
-        Device<LightEntity> lamp = deviceManager.lightDevice(deviceId);
+        LightEntity light = deviceManager.device(deviceId).entity(LampDevice.LIGHT);
 
         DeviceInfo info = new DeviceInfo();
         info.setManufacturer("Wiz");
 
-        WizLamp wizLamp = new WizLamp(lamp.getMainEntity(), info, effects);
+        WizLamp wizLamp = new WizLamp(light, info, effects);
         for (WizSection.BulbConfiguration bulbConfig : lampConfig.getBulbs()) {
             try {
                 InetAddress address = InetAddress.getByName(bulbConfig.getIp());

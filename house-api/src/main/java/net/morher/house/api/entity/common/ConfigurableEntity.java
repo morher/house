@@ -1,6 +1,9 @@
-package net.morher.house.api.entity;
+package net.morher.house.api.entity.common;
 
 import lombok.Getter;
+import net.morher.house.api.entity.Entity;
+import net.morher.house.api.entity.EntityId;
+import net.morher.house.api.entity.EntityListener;
 
 public class ConfigurableEntity<O extends EntityOptions> extends Entity {
     @Getter

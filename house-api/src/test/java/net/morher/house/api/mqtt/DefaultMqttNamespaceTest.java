@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 
-import net.morher.house.api.device.DeviceId;
+import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.EntityId;
 
 public class DefaultMqttNamespaceTest {

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.morher.house.api.device.DeviceManager;
+import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;
 import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;

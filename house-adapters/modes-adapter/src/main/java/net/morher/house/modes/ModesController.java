@@ -6,13 +6,13 @@ import java.util.Map.Entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceInfo;
-import net.morher.house.api.entity.CommandableEntity;
-import net.morher.house.api.entity.EntityCommandListener;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.EntityId;
 import net.morher.house.api.entity.EntityManager;
-import net.morher.house.api.entity.EntityOptions;
+import net.morher.house.api.entity.common.CommandableEntity;
+import net.morher.house.api.entity.common.EntityCommandListener;
+import net.morher.house.api.entity.common.EntityOptions;
 import net.morher.house.api.entity.switches.SwitchOptions;
 import net.morher.house.modes.ModesAdapterConfiguration.ModeDeviceConfiguration;
 import net.morher.house.modes.ModesAdapterConfiguration.ModeEntityConfiguration;
@@ -41,10 +41,6 @@ public class ModesController {
 
         ModesDevice device = new ModesDevice(deviceId, deviceInfo);
 
-        ModeEntityConfiguration mainEntityConfig = deviceConfig.getMainEntity();
-        if (mainEntityConfig != null) {
-            configureEntity(mainEntityConfig, device, null);
-        }
         for (Entry<String, ModeEntityConfiguration> entity : deviceConfig.getEntities().entrySet()) {
             configureEntity(entity.getValue(), device, entity.getKey());
         }

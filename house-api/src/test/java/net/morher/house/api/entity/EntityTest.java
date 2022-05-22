@@ -9,8 +9,8 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceInfo;
+import net.morher.house.api.entity.common.ConfigurableEntity;
+import net.morher.house.api.entity.common.EntityOptions;
 
 public class EntityTest {
 

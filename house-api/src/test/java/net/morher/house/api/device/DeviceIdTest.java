@@ -8,6 +8,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 
+import net.morher.house.api.entity.DeviceId;
+
 public class DeviceIdTest {
 
     @Test

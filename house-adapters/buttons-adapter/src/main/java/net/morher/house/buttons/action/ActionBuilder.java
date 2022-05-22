@@ -2,10 +2,12 @@ package net.morher.house.buttons.action;
 
 import java.util.List;
 
-import net.morher.house.api.device.Device;
-import net.morher.house.api.device.DeviceId;
-import net.morher.house.api.device.DeviceManager;
-import net.morher.house.api.entity.EntityId;
+import net.morher.house.api.devicetypes.GeneralDevice;
+import net.morher.house.api.devicetypes.LampDevice;
+import net.morher.house.api.entity.Device;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceManager;
+import net.morher.house.api.entity.EntityDefinition;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.light.LightState;
 import net.morher.house.api.entity.light.LightState.PowerState;
@@ -46,7 +48,8 @@ public class ActionBuilder {
     private void addActions(Builder block, ActionConfig actionConfig) {
         addFirstMatch(block, actionConfig.getFirstMatch());
         addLightAction(block, actionConfig.getLight());
-        addSwitchAction(block, actionConfig.getSwitchCommand());
+        addSwitchAction(block, actionConfig.getPower(), GeneralDevice.POWER);
+        addSwitchAction(block, actionConfig.getEnable(), GeneralDevice.ENABLE);
     }
 
     private void addFirstMatch(Builder block, List<ConditionalActionConfig> config) {
@@ -68,18 +71,18 @@ public class ActionBuilder {
 
             List<DeviceId> devices = lamps.getDevices(config.getLamps(), config.getRefs());
             for (DeviceId deviceId : devices) {
-                Device<LightEntity> lamp = deviceManager.lightDevice(deviceId);
-                block.add(new CommandEntityAction<>(lamp.getMainEntity(), lightState));
+                Device lamp = deviceManager.device(deviceId);
+                block.add(new CommandEntityAction<>(lamp.entity(LampDevice.LIGHT), lightState));
             }
         }
     }
 
-    private void addSwitchAction(Builder block, SwitchConfig config) {
+    private void addSwitchAction(Builder block, SwitchConfig config, EntityDefinition<SwitchEntity> entityDefinition) {
         if (config != null) {
             List<DeviceId> devices = switches.getDevices(config.getSwitches(), config.getRefs());
             for (DeviceId deviceId : devices) {
-                SwitchEntity switchEntity = deviceManager.getEntityManager().switchEntity(new EntityId(deviceId, null));
-                block.add(new CommandEntityAction<>(switchEntity, config.isPower()));
+                SwitchEntity switchEntity = deviceManager.device(deviceId).entity(entityDefinition);
+                block.add(new CommandEntityAction<>(switchEntity, config.isState()));
             }
         }
     }
@@ -103,7 +106,8 @@ public class ActionBuilder {
             addAnyOfConditions(conditions, config.getAnyOf());
             addLightConditions(conditions, config.getLight());
             addNotCondition(conditions, config.getNot());
-            addSwitchCondition(conditions, config.getSwitchCondition());
+            addSwitchCondition(conditions, config.getPower(), GeneralDevice.POWER);
+            addSwitchCondition(conditions, config.getEnable(), GeneralDevice.ENABLE);
         }
         return conditions.optimize();
     }
@@ -131,8 +135,8 @@ public class ActionBuilder {
             LightState lightState = buildLightState(config);
             List<DeviceId> devices = lamps.getDevices(config.getLamps(), config.getRefs());
             for (DeviceId deviceId : devices) {
-                Device<LightEntity> lamp = deviceManager.lightDevice(deviceId);
-                conditions.add(new LightCondition(lamp.getMainEntity(), lightState));
+                LightEntity lightEntity = deviceManager.device(deviceId).entity(LampDevice.LIGHT);
+                conditions.add(new LightCondition(lightEntity, lightState));
             }
         }
     }
@@ -143,12 +147,12 @@ public class ActionBuilder {
         }
     }
 
-    private void addSwitchCondition(AllConditions conditions, SwitchConfig config) {
+    private void addSwitchCondition(AllConditions conditions, SwitchConfig config, EntityDefinition<SwitchEntity> entityDefinition) {
         if (config != null) {
             List<DeviceId> devices = switches.getDevices(config.getSwitches(), config.getRefs());
             for (DeviceId deviceId : devices) {
-                SwitchEntity switchEntity = deviceManager.getEntityManager().switchEntity(new EntityId(deviceId, null));
-                conditions.add(new EntityStateCondition<>(switchEntity, config.isPower()));
+                SwitchEntity switchEntity = deviceManager.device(deviceId).entity(entityDefinition);
+                conditions.add(new EntityStateCondition<>(switchEntity, config.isState()));
             }
         }
     }
