@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.morher.house.api.config.DeviceName;
 
 @Data
@@ -18,6 +19,7 @@ public class WizSection {
     }
 
     @Data
+    @RequiredArgsConstructor
     @AllArgsConstructor
     public static class BulbConfiguration {
         private String ip;
