@@ -26,9 +26,11 @@ public interface MqttNamespace {
         return Normalizer.normalize(name, Form.NFD) // Separates letters and accents
                 .replaceAll("\\p{M}", "") // Removes accents
                 .toLowerCase()
-                .replace("�", "ae")
-                .replace("�", "o")
+                .replace("æ", "ae")
+                .replace("ø", "o")
                 .replaceAll("-", "") // Remove hyphens
-                .replaceAll("[^a-z0-9_]+", "-"); // Replace any unknown letter or number with -.
+                .replaceAll("[^a-z0-9_]+", "-") // Replace any unknown letter or number with -.
+                .replaceAll("^-", "") // Remove leading dash
+                .replaceAll("-$", ""); // Remove trailing dash
     }
 }
