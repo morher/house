@@ -19,6 +19,8 @@ public class WledNode {
         log.debug("Update " + topic.getTopic() + " segment " + segmentId);
 
         WledNodeState nodeState = new WledNodeState();
+        nodeState.setPowerOn(true);
+        nodeState.setBrightness(255);
         nodeState.setSegments(new ArrayList<>());
         WledSegment seg = new WledSegment();
         seg.setId(segmentId);
