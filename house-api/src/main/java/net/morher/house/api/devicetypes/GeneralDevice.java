@@ -1,6 +1,7 @@
 package net.morher.house.api.devicetypes;
 
 import net.morher.house.api.entity.EntityDefinition;
+import net.morher.house.api.entity.sensor.SensorEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
 
 /**
@@ -9,6 +10,16 @@ import net.morher.house.api.entity.switches.SwitchEntity;
  * @author Morten Hermansen
  */
 public class GeneralDevice {
+    /**
+     * <p>
+     * A {@link SensorEntity} definition for the device status. This entity is for reporting an overall status of a device, more
+     * than just whether it is on or off.
+     * 
+     * <p>
+     * Examples: Battery charger state, Dishwasher status.
+     */
+    public static final EntityDefinition<SensorEntity<String>> STATUS = new EntityDefinition<>("Status", (em, id) -> em.stringSensorEntity(id));
+
     /**
      * <p>
      * A {@link SwitchEntity} definition for devices than can be turned on or off, typically using power.
