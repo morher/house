@@ -1,6 +1,7 @@
 package net.morher.house.api.entity;
 
 import net.morher.house.api.entity.light.LightEntity;
+import net.morher.house.api.entity.number.DecimalEntity;
 import net.morher.house.api.entity.sensor.SensorEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
@@ -19,6 +20,10 @@ public class EntityManager {
 
     public <E extends Entity> E entity(DeviceId device, EntityDefinition<E> entityDefinition) {
         return entityDefinition.createEntity(this, device);
+    }
+
+    public DecimalEntity decimalEntity(EntityId entityId) {
+        return new DecimalEntity(client, entityId, entityChanges.getDispatcher());
     }
 
     public SensorEntity<Double> decimalSensorEntity(EntityId entityId) {
