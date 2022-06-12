@@ -5,10 +5,15 @@ import java.util.function.Function;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 public class JsonMessage {
+    public static PayloadFormat<JsonNode> toJsonNode() {
+        return new JsonMapper<>(new ObjectMapper().readerFor(JsonNode.class));
+    }
+
     public static <T> PayloadFormat<T> toType(Class<T> targetClass) {
         return new JsonMapper<>(new ObjectMapper().readerFor(targetClass));
     }

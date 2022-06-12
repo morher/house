@@ -1,4 +1,4 @@
-package net.morher.house.buttons;
+package net.morher.house.buttons.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;
 import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
+import net.morher.house.api.mqtt.payload.JsonMessage;
 import net.morher.house.api.mqtt.payload.RawMessage;
 import net.morher.house.buttons.action.Action;
 import net.morher.house.buttons.action.ActionBuilder;
@@ -63,8 +64,19 @@ public class ButtonsController {
             input.putEvent(eventType, action);
         }
 
-        client.subscribe(config.getTopic(), MqttMessageListener.map(RawMessage.toStr()).thenNotify(input));
+        client.subscribe(config.getTopic(), inputListener(input, config));
         inputs.add(input);
+    }
+
+    private MqttMessageListener inputListener(ButtonInput input, InputConfig config) {
+        if (config.getProperty() != null) {
+            return MqttMessageListener
+                    .map(JsonMessage.toJsonNode())
+                    .thenNotify(new PropertyFilter(config.getProperty(), input));
+        }
+        return MqttMessageListener
+                .map(RawMessage.toStr())
+                .thenNotify(input);
     }
 
     private void addEventsFromTemplates(

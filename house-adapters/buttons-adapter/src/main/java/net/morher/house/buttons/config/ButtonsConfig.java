@@ -21,6 +21,7 @@ public class ButtonsConfig {
     @Data
     public static class InputConfig {
         private String topic;
+        private String property;
         private boolean inverted;
         private List<String> templates = new ArrayList<>();
         private List<DeviceName> lamps = new ArrayList<>();

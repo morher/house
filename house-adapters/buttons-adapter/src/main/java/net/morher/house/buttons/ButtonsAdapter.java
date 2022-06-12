@@ -5,6 +5,7 @@ import net.morher.house.api.context.HouseMqttContext;
 import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.buttons.config.ButtonsAdapterConfiguration;
+import net.morher.house.buttons.controller.ButtonsController;
 import net.morher.house.buttons.pattern.ButtonManager;
 
 public class ButtonsAdapter implements HouseAdapter {
