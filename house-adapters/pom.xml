@@ -20,6 +20,7 @@
 		<module>epson-projector-adapter</module>
 		<module>miele-adapter</module>
 		<module>modes-adapter</module>
+		<module>tasmota-adapter</module>
 		<module>wizlight-adapter</module>
 		<module>wled-adapter</module>
 	</modules>

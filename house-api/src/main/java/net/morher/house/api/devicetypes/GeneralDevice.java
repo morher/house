@@ -10,15 +10,27 @@ import net.morher.house.api.entity.switches.SwitchEntity;
  * @author Morten Hermansen
  */
 public class GeneralDevice {
+
     /**
      * <p>
-     * A {@link SensorEntity} definition for the device status. This entity is for reporting an overall status of a device, more
-     * than just whether it is on or off.
+     * A {@link SensorEntity} definition for reporting device battery level. The battery level should be reported as a value
+     * between 0 (empty) and 100 (full).
      * 
      * <p>
-     * Examples: Battery charger state, Dishwasher status.
+     * Examples: wireless sensors, wireless buttons.
      */
-    public static final EntityDefinition<SensorEntity<String>> STATUS = new EntityDefinition<>("Status", (em, id) -> em.stringSensorEntity(id));
+    public static final EntityDefinition<SensorEntity<Double>> DEVICE_BATTERY = new EntityDefinition<>("Device battery", (em, id) -> em.decimalSensorEntity(id));
+
+    /**
+     * <p>
+     * A {@link SwitchEntity} definition for devices that can have their functionality enabled or disabled, while it doesn't
+     * necessarily change the power status. It can also be used for virtual devices representing a binary state, rather than
+     * turning something physical on or off.
+     * 
+     * <p>
+     * Examples: Guest mode, vacation mode, motion detection for light automation.
+     */
+    public static final EntityDefinition<SwitchEntity> ENABLE = new EntityDefinition<>("Enable", (em, id) -> em.switchEntity(id));
 
     /**
      * <p>
@@ -31,13 +43,12 @@ public class GeneralDevice {
 
     /**
      * <p>
-     * A {@link SwitchEntity} definition for devices that can have their functionality enabled or disabled, while it doesn't
-     * necessarily change the power status. It can also be used for virtual devices representing a binary state, rather than
-     * turning something physical on or off.
+     * A {@link SensorEntity} definition for the device status. This entity is for reporting an overall status of a device, more
+     * than just whether it is on or off.
      * 
      * <p>
-     * Examples: Guest mode, vacation mode, motion detection for light automation.
+     * Examples: Battery charger state, Dishwasher status.
      */
-    public static final EntityDefinition<SwitchEntity> ENABLE = new EntityDefinition<>("Enable", (em, id) -> em.switchEntity(id));
+    public static final EntityDefinition<SensorEntity<String>> STATUS = new EntityDefinition<>("Status", (em, id) -> em.stringSensorEntity(id));
 
 }
