@@ -13,4 +13,22 @@ public class CommandEntityAction<C> implements Action {
         entity.sendCommand(modifiedState);
     }
 
+    @Override
+    public void storePreEventState() {
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Set state of \"")
+                .append(entity.getId().getDevice().getRoomName())
+                .append(" - ")
+                .append(entity.getId().getDevice().getDeviceName())
+                .append(" - ")
+                .append(entity.getId().getEntity())
+                .append("\" to ")
+                .append(modifiedState);
+        return sb.toString();
+    }
+
 }

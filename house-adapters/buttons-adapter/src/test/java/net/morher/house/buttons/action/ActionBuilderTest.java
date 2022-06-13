@@ -140,8 +140,10 @@ public class ActionBuilderTest {
     }
 
     private Action buildAction(String yaml) {
-        return new ActionBuilder(deviceManager, inputConfig())
+        Action action = new ActionBuilder(deviceManager, inputConfig())
                 .buildAction(Collections.singletonList(parse(yaml, ActionConfig.class)));
+        action.storePreEventState();
+        return action;
 
     }
 

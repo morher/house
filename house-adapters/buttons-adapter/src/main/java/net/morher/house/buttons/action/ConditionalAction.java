@@ -6,4 +6,11 @@ import lombok.Data;
 public class ConditionalAction {
     private final Condition condition;
     private final Action action;
+
+    public void storePreEventState() {
+        if (condition != null) {
+            condition.storePreEventState();
+        }
+        action.storePreEventState();
+    }
 }

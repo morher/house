@@ -1,16 +1,25 @@
 package net.morher.house.buttons.action;
 
+import net.morher.house.api.entity.EntityId;
 import net.morher.house.api.entity.common.EntityStateListener;
 import net.morher.house.api.entity.common.StatefullEntity;
 import net.morher.house.api.entity.light.LightState;
 
 public class LightCondition implements Condition, EntityStateListener<LightState> {
+    private final EntityId entityId;
     private final LightState conditionState;
     private LightState currentState = new LightState();
+    private LightState preEventState = currentState;
 
     public LightCondition(StatefullEntity<LightState, ?> lamp, LightState conditionState) {
+        this.entityId = lamp.getId();
         lamp.state().subscribe(this);
         this.conditionState = conditionState;
+    }
+
+    @Override
+    public void storePreEventState() {
+        preEventState = currentState;
     }
 
     @Override
@@ -20,13 +29,30 @@ public class LightCondition implements Condition, EntityStateListener<LightState
 
     @Override
     public boolean isMatch() {
-        return matches(conditionState.getState(), currentState.getState())
-                && matches(conditionState.getBrightness(), currentState.getBrightness())
-                && matches(conditionState.getEffect(), currentState.getEffect());
+        return matches(conditionState.getState(), preEventState.getState())
+                && matches(conditionState.getBrightness(), preEventState.getBrightness())
+                && matches(conditionState.getEffect(), preEventState.getEffect());
     }
 
     private <T> boolean matches(T conditionValue, T actual) {
         return conditionValue == null
                 || conditionValue.equals(actual);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("State of \"")
+                .append(entityId.getDevice().getRoomName())
+                .append(" - ")
+                .append(entityId.getDevice().getDeviceName())
+                .append(" - ")
+                .append(entityId.getEntity())
+                .append("\" is ")
+                .append(conditionState)
+                .append(" (")
+                .append(isMatch())
+                .append(")");
+        return sb.toString();
     }
 }

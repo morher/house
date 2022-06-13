@@ -6,6 +6,13 @@ import java.util.List;
 public class AnyCondition implements Condition {
     private final List<Condition> conditions = new ArrayList<>();
 
+    @Override
+    public void storePreEventState() {
+        for (Condition condition : conditions) {
+            condition.storePreEventState();
+        }
+    }
+
     public AnyCondition add(Condition condition) {
         if (condition instanceof AnyCondition) {
             conditions.addAll(((AnyCondition) condition).conditions);
@@ -30,5 +37,15 @@ public class AnyCondition implements Condition {
             return conditions.get(0);
         }
         return this;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("any of\n");
+        for (Condition condition : conditions) {
+            sb.append(condition.toString().indent(4));
+        }
+        return sb.toString();
     }
 }

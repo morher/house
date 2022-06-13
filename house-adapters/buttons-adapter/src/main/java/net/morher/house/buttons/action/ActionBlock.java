@@ -1,5 +1,7 @@
 package net.morher.house.buttons.action;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +13,24 @@ public class ActionBlock implements Action {
     }
 
     @Override
+    public void storePreEventState() {
+        for (Action action : actions) {
+            action.storePreEventState();
+        }
+    }
+
+    @Override
     public void perform() {
         for (Action action : actions) {
             action.perform();
         }
+    }
+
+    @Override
+    public String toString() {
+        return actions.stream()
+                .map(Object::toString)
+                .collect(joining("\n"));
     }
 
     public static Builder builder() {

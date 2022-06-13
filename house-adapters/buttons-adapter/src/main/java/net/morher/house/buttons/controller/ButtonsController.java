@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;
@@ -22,6 +23,7 @@ import net.morher.house.buttons.pattern.ButtonEvent;
 import net.morher.house.buttons.pattern.ButtonListener;
 import net.morher.house.buttons.pattern.ButtonManager;
 
+@Slf4j
 public class ButtonsController {
     private final HouseMqttClient client;
     private final ButtonManager buttonManager;
@@ -122,10 +124,22 @@ public class ButtonsController {
 
         @Override
         public void onButtonEvent(ButtonEvent event) {
+            if (event.getPrecedingEvent() == null) {
+                log.debug("New event, store pre event state");
+                storePreEventContext();
+            }
             String eventType = event.toString();
+            log.trace("Received event: {}", eventType);
             Action action = eventAction.get(eventType);
             if (action != null) {
+                log.debug("Perform action:\n{}", action);
                 action.perform();
+            }
+        }
+
+        private void storePreEventContext() {
+            for (Action action : eventAction.values()) {
+                action.storePreEventState();
             }
         }
     }
