@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import net.morher.house.api.config.DeviceName;
-import net.morher.house.api.entity.DeviceId;
 
 public class DeviceDefaults {
     private final List<DeviceName> defaultDevices;
@@ -14,23 +13,21 @@ public class DeviceDefaults {
         this.defaultDevices = defaultDevices;
     }
 
-    public List<DeviceId> getDevices(
+    public List<DeviceName> getDeviceNames(
             Collection<DeviceName> specifiedDevices,
             Collection<String> references) {
 
-        List<DeviceId> devices = new ArrayList<>();
+        List<DeviceName> devices = new ArrayList<>();
         for (DeviceName deviceName : specifiedDevices) {
-            devices.add(deviceName.toDeviceId());
+            devices.add(deviceName);
         }
         // TODO: references
         if (specifiedDevices.isEmpty()
                 && references.isEmpty()) {
             for (DeviceName deviceName : defaultDevices) {
-                devices.add(deviceName.toDeviceId());
+                devices.add(deviceName);
             }
         }
-
         return devices;
     }
-
 }
