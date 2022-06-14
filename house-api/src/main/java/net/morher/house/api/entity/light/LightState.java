@@ -46,6 +46,9 @@ public class LightState {
         }
         if (updatedState.getBrightness() != null) {
             updated = updated.withBrightness(updatedState.getBrightness());
+            if (updated.getBrightness().equals(0)) {
+                updated = updated.withState(PowerState.OFF);
+            }
         }
         if (updatedState.getEffect() != null) {
             updated = updated.withEffect(updatedState.getEffect());

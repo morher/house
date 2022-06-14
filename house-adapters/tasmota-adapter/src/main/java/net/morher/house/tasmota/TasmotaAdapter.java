@@ -5,6 +5,7 @@ import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.tasmota.config.TasmotaAdapterConfiguration;
 import net.morher.house.tasmota.config.TasmotaConfiguration;
+import net.morher.house.tasmota.lamp.TasmotaLampController;
 import net.morher.house.tasmota.sensor.TasmotaSensorController;
 
 public class TasmotaAdapter {
@@ -18,6 +19,9 @@ public class TasmotaAdapter {
         TasmotaConfiguration config = ctx.loadAdapterConfig(TasmotaAdapterConfiguration.class).getTasmota();
 
         new TasmotaSensorController(client, deviceManager)
+                .configure(config);
+
+        new TasmotaLampController(client, deviceManager)
                 .configure(config);
     }
 }
