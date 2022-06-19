@@ -31,6 +31,9 @@ public class Device {
         }
         E entity = entityDefinition.createEntity(entityManager, deviceId);
         entities.put(entityDefinition.getEntityName(), new SubEntityEntry<>(entityDefinition, entity));
+        if (deviceInfo != null) {
+            entity.setDeviceInfo(deviceInfo);
+        }
         return entity;
     }
 
@@ -40,7 +43,6 @@ public class Device {
 
     public <O extends EntityOptions, E extends ConfigurableEntity<O>> E entity(EntityDefinition<E> entityDefinition, O options) {
         E entity = entity(entityDefinition);
-        entity.setDeviceInfo(deviceInfo);
         entity.setOptions(options);
         return entity;
     }

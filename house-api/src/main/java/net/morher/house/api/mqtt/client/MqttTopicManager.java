@@ -15,7 +15,9 @@ public class MqttTopicManager<T> {
         this.mqtt = mqtt;
         this.topic = topic;
         this.serializer = serializer;
-        this.listener = MqttMessageListener.map(serializer).thenNotify(listener);
+        this.listener = listener != null
+                ? MqttMessageListener.map(serializer).thenNotify(listener)
+                : null;
 
     }
 
@@ -28,7 +30,7 @@ public class MqttTopicManager<T> {
     }
 
     public void activateSubscription(boolean active) {
-        if (active) {
+        if (active && listener != null) {
             if (subscription == null) {
                 subscription = mqtt.subscribe(topic, listener);
             }

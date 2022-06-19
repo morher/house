@@ -24,6 +24,10 @@ public class BooleanMessage implements PayloadFormat<Boolean> {
         return new BooleanMessage("OFF", "ON", DEFAULT_TRUE_VALUES);
     }
 
+    public static BooleanMessage onOffLowerCase() {
+        return new BooleanMessage("off", "on", DEFAULT_TRUE_VALUES);
+    }
+
     @Override
     public byte[] serialize(Boolean value) {
         return value

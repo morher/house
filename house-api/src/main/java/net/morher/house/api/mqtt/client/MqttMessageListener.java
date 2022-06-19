@@ -1,5 +1,7 @@
 package net.morher.house.api.mqtt.client;
 
+import java.util.function.Consumer;
+
 import net.morher.house.api.mqtt.payload.PayloadFormat;
 
 public interface MqttMessageListener {
@@ -24,6 +26,19 @@ public interface MqttMessageListener {
         }
     }
 
+    public static class MessageForwarder<T> implements ParsedMqttMessageListener<T> {
+        private final Consumer<T> delegate;
+
+        public MessageForwarder(Consumer<T> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void onMessage(String topic, T data, int qos, boolean retained) {
+            delegate.accept(data);
+        }
+    }
+
     public static class ParsingMqttMessageListenerBuilder<T> {
         private final PayloadFormat<T> mapper;
 
@@ -33,6 +48,10 @@ public interface MqttMessageListener {
 
         public MqttMessageListener thenNotify(ParsedMqttMessageListener<? super T> listener) {
             return new ParsingMqttMessageListener<>(mapper, listener);
+        }
+
+        public MqttMessageListener thenNotify(Consumer<? super T> listener) {
+            return new ParsingMqttMessageListener<>(mapper, new MessageForwarder<>(listener));
         }
     }
 

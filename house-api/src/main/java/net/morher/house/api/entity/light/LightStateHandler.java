@@ -12,13 +12,17 @@ public class LightStateHandler {
     private final Subscription commandSubscription;
     private LightState currentState;
 
-    public LightStateHandler(LightEntity lightEntity, DeviceInfo deviceInfo, EntityStateListener<LightState> delegate) {
+    public LightStateHandler(LightEntity lightEntity, EntityStateListener<LightState> delegate) {
         this.lightEntity = lightEntity;
         this.delegate = delegate;
         this.commandSubscription = lightEntity.command()
                 .subscribe(this::handleCommandReceived);
         this.stateSubscription = lightEntity.state()
                 .subscribe(this::handleStateReceived);
+    }
+
+    public LightStateHandler(LightEntity lightEntity, DeviceInfo deviceInfo, EntityStateListener<LightState> delegate) {
+        this(lightEntity, delegate);
         this.lightEntity.setDeviceInfo(deviceInfo);
     }
 

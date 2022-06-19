@@ -48,6 +48,7 @@ public class StatefullEntity<S, O extends EntityOptions> extends ConfigurableEnt
 
     public void publishState(S state) {
         currentState = state;
+        stateSubscriptions.getDispatcher().onStateUpdated(currentState);
         stateTopic.publish(state, true);
     }
 

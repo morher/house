@@ -22,6 +22,7 @@ Adapters implement the functionality behind devices and entities, reacting to co
 | [Epson-projector](./house-adapters/epson-projector-adapter/) | Control Epson projectors throught the ESC/VP.net protocol.                                          |
 | [Miele](./house-adapters/miele-adapter/)                     | Monitors Miele house appliances.                                                                    |
 | [Modes](./house-adapters/modes-adapter/)                     | Creates virtual devices to set states such as guest mode, vacation mode, etc.                       |
+| [Shelly](./house-adapters/shelly-adapter/)                   | Control [Shelly](https://shelly.cloud/) devices via MQTT.                                           |
 | [Tasmota](./house-adapters/tasmota-adapter/)                 | Control devices flashed with [Tasmota](https://tasmota.github.io/).                                 |
 | [Wiz](./house-adapters/wizlight-adapter/)                    | Control light bulbs from [WiZ](https://www.wizconnected.com/en-gb) through the local UDP interface. |
 | [Wled](./house-adapters/wled-adapter/)                       | Control [WLED](https://kno.wled.ge/) managed LED strips.                                            |
