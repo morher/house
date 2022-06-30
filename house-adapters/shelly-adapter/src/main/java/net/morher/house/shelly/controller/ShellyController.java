@@ -1,5 +1,6 @@
 package net.morher.house.shelly.controller;
 
+import net.morher.house.api.devicetypes.GeneralDevice;
 import net.morher.house.api.devicetypes.LampDevice;
 import net.morher.house.api.entity.Device;
 import net.morher.house.api.entity.DeviceId;
@@ -10,6 +11,7 @@ import net.morher.house.shelly.config.ShellyConfig;
 import net.morher.house.shelly.config.ShellyConfig.ShellyLampConfig;
 import net.morher.house.shelly.config.ShellyConfig.ShellyNodeConfig;
 import net.morher.house.shelly.config.ShellyConfig.ShellyRelayConfig;
+import net.morher.house.shelly.config.ShellyConfig.ShellySwitchConfig;
 
 public class ShellyController {
     private final HouseMqttClient client;
@@ -35,7 +37,7 @@ public class ShellyController {
             return;
         }
         configureLamp(nodeName, relayIndex, relayConfig.getLamp());
-
+        configureSwitch(nodeName, relayIndex, relayConfig.getSwitchConfig());
     }
 
     private void configureLamp(String nodeName, int relayIndex, ShellyLampConfig lampConfig) {
@@ -50,5 +52,18 @@ public class ShellyController {
         device.setDeviceInfo(deviceInfo);
 
         new ShellyLamp(client, nodeName, relayIndex, device.entity(LampDevice.LIGHT));
+    }
+
+    private void configureSwitch(String nodeName, int relayIndex, ShellySwitchConfig switchConfig) {
+        if (switchConfig == null) {
+            return;
+        }
+        DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setManufacturer("Shelly");
+
+        Device device = deviceManager.device(switchConfig.getDevice().toDeviceId());
+        device.setDeviceInfo(deviceInfo);
+
+        new ShellySwitch(client, nodeName, relayIndex, device.entity(GeneralDevice.POWER));
     }
 }

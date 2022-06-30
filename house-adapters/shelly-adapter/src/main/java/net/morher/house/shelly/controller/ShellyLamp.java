@@ -30,6 +30,6 @@ public class ShellyLamp {
     }
 
     public void onRelayStateChanged(String topic, Boolean data, int qos, boolean retained) {
-        handler.updateLightState(new LightState(data ? PowerState.ON : PowerState.OFF, null, null));
+        handler.updateState(new LightState(data ? PowerState.ON : PowerState.OFF, null, null));
     }
 }

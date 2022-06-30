@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.DeviceInfo;
+import net.morher.house.api.entity.light.BaseStateHandler;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.light.LightOptions;
 import net.morher.house.api.entity.light.LightState;
@@ -20,7 +21,7 @@ public class WledLedStrip {
     private final DeviceId deviceId;
     private final WledNode node;
     private final int segmentId;
-    private final LightStateHandler handler;
+    private final BaseStateHandler handler;
     private final PresetManager presets;
     private LedStripState state = new LedStripState();
 

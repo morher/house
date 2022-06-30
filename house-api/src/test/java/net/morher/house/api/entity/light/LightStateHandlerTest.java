@@ -56,12 +56,12 @@ public class LightStateHandlerTest {
 
         @SuppressWarnings("unchecked")
         EntityStateListener<LightState> listener = mock(EntityStateListener.class);
-        LightStateHandler handler = new LightStateHandler(entity, new DeviceInfo(), listener);
+        BaseStateHandler handler = new LightStateHandler(entity, new DeviceInfo(), listener);
 
         LightState state = new LightState(PowerState.ON, 127, null);
 
         // Do not notify listener when state is updated locally
-        handler.updateLightState(state);
+        handler.updateState(state);
 
         verify(listener, never()).onStateUpdated(eq(state));
         assertThat(client.getMessages().size(), is(1));
@@ -69,7 +69,7 @@ public class LightStateHandlerTest {
         assertThat(message.getPayload(LIGHT_FORMAT), is(equalTo(state)));
 
         // Do not publish state again if unchanged
-        handler.updateLightState(state);
+        handler.updateState(state);
         verify(listener, never()).onStateUpdated(eq(state));
         assertThat("Should not publish unchanged state",
                 client.getMessages().size(), is(1));
