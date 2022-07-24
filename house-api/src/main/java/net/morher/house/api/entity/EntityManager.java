@@ -1,5 +1,6 @@
 package net.morher.house.api.entity;
 
+import net.morher.house.api.entity.cover.CoverEntity;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.number.DecimalEntity;
 import net.morher.house.api.entity.sensor.SensorEntity;
@@ -20,6 +21,10 @@ public class EntityManager {
 
     public <E extends Entity> E entity(DeviceId device, EntityDefinition<E> entityDefinition) {
         return entityDefinition.createEntity(this, device);
+    }
+
+    public CoverEntity coverEntity(EntityId entityId) {
+        return new CoverEntity(client, entityId, entityChanges.getDispatcher());
     }
 
     public DecimalEntity decimalEntity(EntityId entityId) {

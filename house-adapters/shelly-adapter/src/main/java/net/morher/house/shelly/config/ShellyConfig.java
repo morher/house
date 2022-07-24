@@ -39,5 +39,6 @@ public class ShellyConfig {
     @Data
     public static class ShellyCoverConfig {
         private DeviceName device;
+        private boolean closedAsSwitch;
     }
 }
