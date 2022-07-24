@@ -4,6 +4,7 @@ import net.morher.house.api.entity.EntityDefinition;
 import net.morher.house.api.entity.sensor.SensorEntity;
 import net.morher.house.api.entity.switches.SwitchDefinition;
 import net.morher.house.api.entity.switches.SwitchEntity;
+import net.morher.house.api.entity.trigger.TriggerEntity;
 
 /**
  * Common {@link EntityDefinition entity definitions}.
@@ -11,6 +12,11 @@ import net.morher.house.api.entity.switches.SwitchEntity;
  * @author Morten Hermansen
  */
 public class GeneralDevice {
+
+    /**
+     * A {@link TriggerEntity} definition for triggers such as button presses and motion detection.
+     */
+    public static final EntityDefinition<TriggerEntity> CONTROL = new EntityDefinition<>("Control", (em, id) -> em.triggerEntity(id));
 
     /**
      * <p>

@@ -18,9 +18,11 @@ public interface MqttNamespace {
 
     String entityBaseTopic(EntityId entityId);
 
+    String entityCommandTopic(EntityId entityId);
+
     String entityStateTopic(EntityId entityId);
 
-    String entityCommandTopic(EntityId entity);
+    String entityTriggerTopic(EntityId entityId);
 
     public static String normalize(String name) {
         return Normalizer.normalize(name, Form.NFD) // Separates letters and accents

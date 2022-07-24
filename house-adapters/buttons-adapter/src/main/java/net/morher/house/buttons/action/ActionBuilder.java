@@ -18,12 +18,14 @@ import net.morher.house.buttons.config.ActionConfig.ConditionConfig;
 import net.morher.house.buttons.config.ActionConfig.ConditionalActionConfig;
 import net.morher.house.buttons.config.ActionConfig.LightConfig;
 import net.morher.house.buttons.config.ActionConfig.SwitchConfig;
+import net.morher.house.buttons.config.ActionConfig.TriggerConfig;
 import net.morher.house.buttons.config.ButtonsConfig.InputConfig;
 
 public class ActionBuilder {
     private final DeviceManager deviceManager;
     private final DeviceDefaults lamps;
     private final DeviceDefaults switches;
+    private final DeviceDefaults triggers;
 
     public ActionBuilder(
             DeviceManager deviceManager,
@@ -33,6 +35,7 @@ public class ActionBuilder {
 
         lamps = new DeviceDefaults(inputConfig.getLamps());
         switches = new DeviceDefaults(inputConfig.getSwitches());
+        triggers = new DeviceDefaults(inputConfig.getTriggers());
     }
 
     public Action buildAction(List<ActionConfig> actionConfigs) {
@@ -50,6 +53,7 @@ public class ActionBuilder {
         addLightAction(block, actionConfig.getLight());
         addSwitchAction(block, actionConfig.getPower(), GeneralDevice.POWER);
         addSwitchAction(block, actionConfig.getEnable(), GeneralDevice.ENABLE);
+        addTriggerAction(block, actionConfig.getTrigger());
     }
 
     private void addFirstMatch(Builder block, List<ConditionalActionConfig> config) {
@@ -85,6 +89,17 @@ public class ActionBuilder {
                 SwitchEntity switchEntity = deviceManager.device(deviceName.toDeviceId()).entity(entityDefinition);
                 block.add(new CommandEntityAction<>(switchEntity, config.isState()));
             }
+        }
+    }
+
+    private void addTriggerAction(Builder block, TriggerConfig config) {
+        if (config != null) {
+            List<DeviceName> devices = triggers.getDeviceNames(config.getTriggers(), config.getRefs());
+            for (DeviceName deviceName : devices) {
+                Device trigger = deviceManager.device(deviceName.toDeviceId());
+                block.add(new TriggerEventAction(trigger.entity(null), null));
+            }
+
         }
     }
 

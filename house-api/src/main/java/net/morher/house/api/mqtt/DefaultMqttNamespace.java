@@ -36,11 +36,17 @@ public class DefaultMqttNamespace implements MqttNamespace {
         return deviceBaseTopic;
     }
 
+    public String entityCommandTopic(EntityId entity) {
+        return entityBaseTopic(entity) + "/command";
+    }
+
     public String entityStateTopic(EntityId entityId) {
         return entityBaseTopic(entityId);
     }
 
-    public String entityCommandTopic(EntityId entity) {
-        return entityBaseTopic(entity) + "/command";
+    @Override
+    public String entityTriggerTopic(EntityId entityId) {
+        return entityBaseTopic(entityId);
     }
+
 }

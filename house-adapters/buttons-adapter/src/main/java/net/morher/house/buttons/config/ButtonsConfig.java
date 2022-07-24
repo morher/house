@@ -26,6 +26,7 @@ public class ButtonsConfig {
         private List<String> templates = new ArrayList<>();
         private List<DeviceName> lamps = new ArrayList<>();
         private List<DeviceName> switches = new ArrayList<>();
+        private List<DeviceName> triggers = new ArrayList<>();
         private Map<String, List<ActionConfig>> events = new HashMap<>();
     }
 }

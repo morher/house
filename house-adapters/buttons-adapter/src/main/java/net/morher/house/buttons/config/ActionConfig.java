@@ -16,6 +16,7 @@ public class ActionConfig {
     private LightConfig light;
     private SwitchConfig power;
     private SwitchConfig enable;
+    private TriggerConfig trigger;
 
     @Data
     public static class ConditionalActionConfig {
@@ -56,5 +57,14 @@ public class ActionConfig {
         private final List<String> refs = new ArrayList<>();
         private final List<DeviceName> switches = new ArrayList<>();
         private boolean state;
+    }
+
+    @Data
+    public static class TriggerConfig {
+        @Singular
+        private final List<String> refs = new ArrayList<>();
+        @Singular
+        private final List<DeviceName> triggers = new ArrayList<>();
+        private String event;
     }
 }

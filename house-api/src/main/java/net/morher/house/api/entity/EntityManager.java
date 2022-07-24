@@ -5,6 +5,7 @@ import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.number.DecimalEntity;
 import net.morher.house.api.entity.sensor.SensorEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
+import net.morher.house.api.entity.trigger.TriggerEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.payload.NumberMessage;
 import net.morher.house.api.mqtt.payload.RawMessage;
@@ -49,6 +50,10 @@ public class EntityManager {
 
     public SwitchEntity switchEntity(EntityId entityId) {
         return new SwitchEntity(client, entityId, entityChanges.getDispatcher());
+    }
+
+    public TriggerEntity triggerEntity(EntityId entityId) {
+        return new TriggerEntity(client, entityId, entityChanges.getDispatcher());
     }
 
     public SubscriptionTopic<EntityListener> entityChanges() {
