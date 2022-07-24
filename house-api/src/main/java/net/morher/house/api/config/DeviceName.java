@@ -27,4 +27,25 @@ public class DeviceName {
     public EntityId toEntityId(String defaultEntityName) {
         return new EntityId(toDeviceId(), Objects.requireNonNullElse(entity, defaultEntityName));
     }
+
+    public static DeviceName combine(DeviceName... deviceNames) {
+        String room = null;
+        String name = null;
+        String entity = null;
+
+        for (DeviceName deviceName : deviceNames) {
+            if (deviceName != null) {
+                if (deviceName.getRoom() != null && room == null) {
+                    room = deviceName.getRoom();
+                }
+                if (deviceName.getName() != null && name == null) {
+                    name = deviceName.getName();
+                }
+                if (deviceName.getEntity() != null && entity == null) {
+                    entity = deviceName.getEntity();
+                }
+            }
+        }
+        return new DeviceName(room, name, entity);
+    }
 }

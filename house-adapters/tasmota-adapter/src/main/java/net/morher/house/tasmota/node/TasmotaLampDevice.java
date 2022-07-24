@@ -1,4 +1,4 @@
-package net.morher.house.tasmota.lamp;
+package net.morher.house.tasmota.node;
 
 import java.util.ArrayList;
 import java.util.List;

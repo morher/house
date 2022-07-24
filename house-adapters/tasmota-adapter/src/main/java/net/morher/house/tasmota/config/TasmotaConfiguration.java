@@ -10,9 +10,25 @@ import net.morher.house.api.config.DeviceName;
 
 @Data
 public class TasmotaConfiguration {
+    private Map<String, NodeConfiguration> nodes = new HashMap<>();
+    private List<SwitchConfiguration> switches = new ArrayList<>();
     private List<LampConfiguration> lamps = new ArrayList<>();
     private List<SensorConfiguration> sensors = new ArrayList<>();
     private Map<String, SensorTypeConfiguration> sensorTypes = new HashMap<>();
+
+    @Data
+    public static class NodeConfiguration {
+        private DeviceName device;
+        private List<SwitchConfiguration> switches = new ArrayList<>();
+    }
+
+    @Data
+    public static class SwitchConfiguration {
+        private String node;
+        private DeviceName device;
+        private String entity;
+        private int relay = 1;
+    }
 
     @Data
     public static class LampConfiguration {

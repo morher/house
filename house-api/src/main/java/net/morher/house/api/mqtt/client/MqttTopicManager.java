@@ -1,5 +1,7 @@
 package net.morher.house.api.mqtt.client;
 
+import java.util.function.Consumer;
+
 import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
 import net.morher.house.api.mqtt.payload.PayloadFormat;
 import net.morher.house.api.subscription.Subscription;
@@ -10,6 +12,10 @@ public class MqttTopicManager<T> {
     private final MqttMessageListener listener;
     private final PayloadFormat<T> serializer;
     private Subscription subscription;
+
+    public MqttTopicManager(HouseMqttClient mqtt, String topic, PayloadFormat<T> serializer) {
+        this(mqtt, topic, serializer, null);
+    }
 
     public MqttTopicManager(HouseMqttClient mqtt, String topic, PayloadFormat<T> serializer, ParsedMqttMessageListener<? super T> listener) {
         this.mqtt = mqtt;
@@ -27,6 +33,23 @@ public class MqttTopicManager<T> {
 
     public boolean isActive() {
         return subscription != null;
+    }
+
+    public <S> MqttTopicManager<S> subTopic(String postFix, PayloadFormat<S> serializer) {
+        return new MqttTopicManager<>(mqtt, topic + postFix, serializer);
+    }
+
+    public Subscription subscribe(ParsedMqttMessageListener<? super T> listener) {
+        return mqtt.subscribe(topic, MqttMessageListener.map(serializer).thenNotify(listener));
+    }
+
+    public Subscription subscribe(Consumer<? super T> listener) {
+        return mqtt.subscribe(topic, MqttMessageListener.map(serializer).thenNotify(listener));
+    }
+
+    public MqttTopicManager<T> activateSubscription() {
+        activateSubscription(true);
+        return this;
     }
 
     public void activateSubscription(boolean active) {

@@ -2,6 +2,7 @@ package net.morher.house.api.devicetypes;
 
 import net.morher.house.api.entity.EntityDefinition;
 import net.morher.house.api.entity.sensor.SensorEntity;
+import net.morher.house.api.entity.switches.SwitchDefinition;
 import net.morher.house.api.entity.switches.SwitchEntity;
 
 /**
@@ -30,7 +31,7 @@ public class GeneralDevice {
      * <p>
      * Examples: Guest mode, vacation mode, motion detection for light automation.
      */
-    public static final EntityDefinition<SwitchEntity> ENABLE = new EntityDefinition<>("Enable", (em, id) -> em.switchEntity(id));
+    public static final EntityDefinition<SwitchEntity> ENABLE = new SwitchDefinition("Enable");
 
     /**
      * <p>
@@ -39,7 +40,7 @@ public class GeneralDevice {
      * <p>
      * Examples: fans, coffee machines, controlled outlets and TVs.
      */
-    public static final EntityDefinition<SwitchEntity> POWER = new EntityDefinition<>("Power", (em, id) -> em.switchEntity(id));
+    public static final EntityDefinition<SwitchEntity> POWER = new SwitchDefinition("Power");
 
     /**
      * <p>
