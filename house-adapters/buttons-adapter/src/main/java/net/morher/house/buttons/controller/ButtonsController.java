@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import net.morher.house.api.devicetypes.GeneralDevice;
+import net.morher.house.api.entity.DeviceId;
+import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.DeviceManager;
+import net.morher.house.api.entity.trigger.TriggerEntity;
+import net.morher.house.api.entity.trigger.TriggerOptions;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;
 import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
@@ -14,10 +19,12 @@ import net.morher.house.api.mqtt.payload.JsonMessage;
 import net.morher.house.api.mqtt.payload.RawMessage;
 import net.morher.house.buttons.action.Action;
 import net.morher.house.buttons.action.ActionBuilder;
+import net.morher.house.buttons.action.Trigger;
 import net.morher.house.buttons.config.ActionConfig;
 import net.morher.house.buttons.config.ButtonsConfig;
 import net.morher.house.buttons.config.ButtonsConfig.InputConfig;
 import net.morher.house.buttons.config.ButtonsConfig.TemplateConfig;
+import net.morher.house.buttons.config.ButtonsConfig.TriggerConfig;
 import net.morher.house.buttons.input.Button;
 import net.morher.house.buttons.pattern.ButtonEvent;
 import net.morher.house.buttons.pattern.ButtonListener;
@@ -29,6 +36,7 @@ public class ButtonsController {
     private final ButtonManager buttonManager;
     private final DeviceManager deviceManager;
     private final List<ButtonInput> inputs = new ArrayList<>();
+    private final Map<String, Trigger> triggers = new HashMap<>();
 
     public ButtonsController(HouseMqttClient client, ButtonManager buttonManager, DeviceManager deviceManager) {
         this.client = client;
@@ -42,7 +50,26 @@ public class ButtonsController {
         }
         Map<String, TemplateConfig> templates = config.getTemplates();
 
+        configureTriggers(config.getTriggers());
+
         configureInputs(config.getInputs(), templates);
+    }
+
+    private void configureTriggers(List<TriggerConfig> triggerConfigs) {
+        for (TriggerConfig triggerConfig : triggerConfigs) {
+            DeviceId deviceId = triggerConfig.getDevice().toDeviceId();
+            TriggerEntity entity = deviceManager.device(deviceId).entity(GeneralDevice.CONTROL);
+
+            TriggerOptions options = new TriggerOptions();
+            for (Map.Entry<String, String> action : triggerConfig.getActionMapping().entrySet()) {
+                options.getAvailableEvents().add(action.getKey());
+                System.out.println("Action: " + action.getValue());
+                triggers.put(action.getValue(), new Trigger(entity, action.getKey()));
+            }
+            DeviceInfo deviceInfo = new DeviceInfo();
+            entity.setDeviceInfo(deviceInfo);
+            entity.setOptions(options);
+        }
     }
 
     private void configureInputs(List<InputConfig> inputs, Map<String, TemplateConfig> templates) {
@@ -58,7 +85,7 @@ public class ButtonsController {
         addEventsFromTemplates(events, config.getTemplates(), templates);
         events.putAll(config.getEvents());
 
-        ActionBuilder context = new ActionBuilder(deviceManager, config);
+        ActionBuilder context = new ActionBuilder(deviceManager, config, triggers);
 
         for (Map.Entry<String, List<ActionConfig>> event : events.entrySet()) {
             String eventType = event.getKey();
@@ -143,5 +170,4 @@ public class ButtonsController {
             }
         }
     }
-
 }

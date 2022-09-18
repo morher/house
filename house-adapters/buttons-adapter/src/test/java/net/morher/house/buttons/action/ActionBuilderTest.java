@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -140,7 +141,7 @@ public class ActionBuilderTest {
     }
 
     private Action buildAction(String yaml) {
-        Action action = new ActionBuilder(deviceManager, inputConfig())
+        Action action = new ActionBuilder(deviceManager, inputConfig(), new HashMap<>())
                 .buildAction(Collections.singletonList(parse(yaml, ActionConfig.class)));
         action.storePreEventState();
         return action;

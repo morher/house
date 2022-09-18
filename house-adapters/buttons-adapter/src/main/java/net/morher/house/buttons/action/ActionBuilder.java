@@ -1,6 +1,7 @@
 package net.morher.house.buttons.action;
 
 import java.util.List;
+import java.util.Map;
 
 import net.morher.house.api.config.DeviceName;
 import net.morher.house.api.devicetypes.GeneralDevice;
@@ -25,17 +26,19 @@ public class ActionBuilder {
     private final DeviceManager deviceManager;
     private final DeviceDefaults lamps;
     private final DeviceDefaults switches;
-    private final DeviceDefaults triggers;
+    private final Map<String, Trigger> triggers;
 
     public ActionBuilder(
             DeviceManager deviceManager,
-            InputConfig inputConfig) {
+            InputConfig inputConfig,
+            Map<String, Trigger> triggers) {
 
         this.deviceManager = deviceManager;
 
         lamps = new DeviceDefaults(inputConfig.getLamps());
         switches = new DeviceDefaults(inputConfig.getSwitches());
-        triggers = new DeviceDefaults(inputConfig.getTriggers());
+        this.triggers = triggers;
+
     }
 
     public Action buildAction(List<ActionConfig> actionConfigs) {
@@ -94,12 +97,12 @@ public class ActionBuilder {
 
     private void addTriggerAction(Builder block, TriggerConfig config) {
         if (config != null) {
-            List<DeviceName> devices = triggers.getDeviceNames(config.getTriggers(), config.getRefs());
-            for (DeviceName deviceName : devices) {
-                Device trigger = deviceManager.device(deviceName.toDeviceId());
-                block.add(new TriggerEventAction(trigger.entity(null), null));
+            Trigger trigger = triggers.get(config.getEvent());
+            if (trigger != null) {
+                block.add(new TriggerEventAction(trigger));
+            } else {
+                throw new IllegalArgumentException("Trigger " + config.getEvent() + " not found");
             }
-
         }
     }
 

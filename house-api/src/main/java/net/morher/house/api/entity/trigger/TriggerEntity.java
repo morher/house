@@ -32,6 +32,10 @@ public class TriggerEntity extends ConfigurableEntity<TriggerOptions> {
         return triggerTopic.subscribe(event -> listener.onTrigger(event));
     }
 
+    public String getTriggerTopic() {
+        return triggerTopic.getTopic();
+    }
+
     public void publishEvent(String event) {
         triggerTopic.publish(event, false);
     }

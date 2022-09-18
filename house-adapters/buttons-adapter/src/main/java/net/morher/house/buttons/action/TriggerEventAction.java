@@ -1,16 +1,14 @@
 package net.morher.house.buttons.action;
 
 import lombok.RequiredArgsConstructor;
-import net.morher.house.api.entity.trigger.TriggerEntity;
 
 @RequiredArgsConstructor
 public class TriggerEventAction implements Action {
-    private final TriggerEntity trigger;
-    private final String event;
+    private final Trigger trigger;
 
     @Override
     public void perform() {
-        trigger.publishEvent(event);
+        trigger.sendEvent();
     }
 
     @Override
@@ -18,4 +16,13 @@ public class TriggerEventAction implements Action {
         // Nothing to store...
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("Trigger ")
+                .append(trigger.getEvent())
+                .append(" on ")
+                .append(trigger.getEntity().getId())
+                .toString();
+    }
 }
