@@ -11,20 +11,25 @@ public class MqttTopicManager<T> {
     private final String topic;
     private final MqttMessageListener listener;
     private final PayloadFormat<T> serializer;
+    private final boolean retainByDefault;
     private Subscription subscription;
 
     public MqttTopicManager(HouseMqttClient mqtt, String topic, PayloadFormat<T> serializer) {
-        this(mqtt, topic, serializer, null);
+        this(mqtt, topic, serializer, false, null);
     }
 
-    public MqttTopicManager(HouseMqttClient mqtt, String topic, PayloadFormat<T> serializer, ParsedMqttMessageListener<? super T> listener) {
+    public MqttTopicManager(HouseMqttClient mqtt, String topic, PayloadFormat<T> serializer, boolean retainByDefault) {
+        this(mqtt, topic, serializer, retainByDefault, null);
+    }
+
+    public MqttTopicManager(HouseMqttClient mqtt, String topic, PayloadFormat<T> serializer, boolean retainByDefault, ParsedMqttMessageListener<? super T> listener) {
         this.mqtt = mqtt;
         this.topic = topic;
         this.serializer = serializer;
         this.listener = listener != null
                 ? MqttMessageListener.map(serializer).thenNotify(listener)
                 : null;
-
+        this.retainByDefault = retainByDefault;
     }
 
     public String getTopic() {
@@ -37,6 +42,10 @@ public class MqttTopicManager<T> {
 
     public <S> MqttTopicManager<S> subTopic(String postFix, PayloadFormat<S> serializer) {
         return new MqttTopicManager<>(mqtt, topic + postFix, serializer);
+    }
+
+    public <S> MqttTopicManager<S> subTopic(String postFix, PayloadFormat<S> serializer, boolean retainByDefault) {
+        return new MqttTopicManager<>(mqtt, topic + postFix, serializer, retainByDefault);
     }
 
     public Subscription subscribe(ParsedMqttMessageListener<? super T> listener) {
@@ -65,7 +74,19 @@ public class MqttTopicManager<T> {
         }
     }
 
+    public void publish(T message) {
+        publish(message, retainByDefault);
+    }
+
     public void publish(T message, boolean retain) {
         mqtt.publish(topic, serializer.serialize(message), retain);
+    }
+
+    public StateObserver<T> observer() {
+        return new StateObserver<>(this);
+    }
+
+    public StateObserver<T> observer(T fallbackValue) {
+        return new StateObserver<>(this, fallbackValue);
     }
 }

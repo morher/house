@@ -39,6 +39,6 @@ public class OnDemandSensorEntity<T> {
     }
 
     public void publishState(T state) {
-        entity().publishState(state);
+        entity().state().publish(state);
     }
 }

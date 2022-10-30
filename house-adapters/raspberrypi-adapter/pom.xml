@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.morher.house</groupId>
+		<artifactId>house-adapters</artifactId>	
+		<version>${revision}</version>
+	</parent>
+
+	<name>Raspberry Pi Adapter</name>
+	<artifactId>raspberrypi-adapter</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+		<mainClass>net.morher.house.raspberrypi.RaspberryPiAdapter</mainClass>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.diozero</groupId>
+			<artifactId>diozero-core</artifactId>
+			<version>1.3.4</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>raspberrypi-adapter</finalName>
+	</build>
+
+</project>

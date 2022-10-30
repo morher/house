@@ -14,18 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DelayedTrigger {
     private final Runnable scheduleCallback = this::considerRun;
-    private final Runnable task;
+    private final ScheduledRunnable task;
     private final ScheduledExecutorService scheduler;
     private final Supplier<Instant> timeProvider;
     private Instant nextExecution;
 
-    public DelayedTrigger(Runnable task, ScheduledExecutorService scheduler, Supplier<Instant> timeProvider) {
+    public DelayedTrigger(ScheduledRunnable task, ScheduledExecutorService scheduler, Supplier<Instant> timeProvider) {
         this.task = task;
         this.scheduler = scheduler;
         this.timeProvider = timeProvider;
     }
 
-    public DelayedTrigger(Runnable task, ScheduledExecutorService scheduler) {
+    public DelayedTrigger(ScheduledRunnable task, ScheduledExecutorService scheduler) {
         this(task, scheduler, Instant::now);
     }
 
@@ -68,6 +68,11 @@ public class DelayedTrigger {
         }
         log.debug("Executing task '{}'", task);
         nextExecution = null;
-        scheduler.execute(task);
+        try {
+            task.runScheduled();
+
+        } catch (Reschedule r) {
+            runAt(r.getRescheduleAt());
+        }
     }
 }

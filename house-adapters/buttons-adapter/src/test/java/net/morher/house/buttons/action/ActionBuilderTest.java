@@ -72,7 +72,7 @@ public class ActionBuilderTest {
 
     @Test
     public void testFirstMatchAction() {
-        livingRoomMoodLamp.publishState(new LightState(PowerState.ON, 127, "Romantic"));
+        livingRoomMoodLamp.state().publish(new LightState(PowerState.ON, 127, "Romantic"));
 
         List<LightState> commands = commandCollector(livingRoomMoodLamp);
 
@@ -104,7 +104,7 @@ public class ActionBuilderTest {
 
     @Test
     public void testFirstMatchActionElse() {
-        livingRoomMoodLamp.publishState(new LightState(PowerState.ON, 127, "Sunrise"));
+        livingRoomMoodLamp.state().publish(new LightState(PowerState.ON, 127, "Sunrise"));
 
         List<LightState> commands = commandCollector(livingRoomMoodLamp);
 

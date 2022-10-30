@@ -3,10 +3,9 @@ package net.morher.house.buttons.action;
 import java.util.Objects;
 
 import net.morher.house.api.entity.EntityId;
-import net.morher.house.api.entity.common.EntityStateListener;
 import net.morher.house.api.entity.common.StatefullEntity;
 
-public class EntityStateCondition<T> implements Condition, EntityStateListener<T> {
+public class EntityStateCondition<T> implements Condition {
     private final EntityId entityId;
     private final T conditionState;
     private T currentState;
@@ -14,7 +13,7 @@ public class EntityStateCondition<T> implements Condition, EntityStateListener<T
 
     public EntityStateCondition(StatefullEntity<T, ?> entity, T conditionState) {
         this.entityId = entity.getId();
-        entity.state().subscribe(this);
+        entity.state().subscribe(this::onStateUpdated);
         this.conditionState = conditionState;
     }
 
@@ -23,8 +22,7 @@ public class EntityStateCondition<T> implements Condition, EntityStateListener<T
         preEventState = currentState;
     }
 
-    @Override
-    public void onStateUpdated(T state) {
+    void onStateUpdated(T state) {
         this.currentState = state;
         if (this.preEventState == null) {
             this.preEventState = state;

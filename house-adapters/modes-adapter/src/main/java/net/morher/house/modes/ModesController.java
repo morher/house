@@ -11,9 +11,9 @@ import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.EntityId;
 import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.common.CommandableEntity;
-import net.morher.house.api.entity.common.EntityCommandListener;
 import net.morher.house.api.entity.common.EntityOptions;
 import net.morher.house.api.entity.switches.SwitchOptions;
+import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
 import net.morher.house.modes.ModesAdapterConfiguration.ModeDeviceConfiguration;
 import net.morher.house.modes.ModesAdapterConfiguration.ModeEntityConfiguration;
 import net.morher.house.modes.ModesAdapterConfiguration.ModesConfiguration;
@@ -69,7 +69,7 @@ public class ModesController {
     }
 
     private static class ModesPassthroughEntity<P, O extends EntityOptions, E extends CommandableEntity<P, O, P>>
-            implements ModesEntity, EntityCommandListener<P> {
+            implements ModesEntity, ParsedMqttMessageListener<P> {
         private final E entity;
 
         public ModesPassthroughEntity(E entity, DeviceInfo deviceInfo, O options) {
@@ -80,8 +80,8 @@ public class ModesController {
         }
 
         @Override
-        public void onCommand(P command) {
-            entity.publishState(command);
+        public void onMessage(String topic, P command, int qos, boolean retained) {
+            entity.state().publish(command);
         }
     }
 

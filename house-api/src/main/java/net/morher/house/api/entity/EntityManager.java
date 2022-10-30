@@ -3,10 +3,12 @@ package net.morher.house.api.entity;
 import net.morher.house.api.entity.cover.CoverEntity;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.number.DecimalEntity;
+import net.morher.house.api.entity.sensor.BinarySensorEntity;
 import net.morher.house.api.entity.sensor.SensorEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
 import net.morher.house.api.entity.trigger.TriggerEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
+import net.morher.house.api.mqtt.payload.BooleanMessage;
 import net.morher.house.api.mqtt.payload.NumberMessage;
 import net.morher.house.api.mqtt.payload.RawMessage;
 import net.morher.house.api.subscription.SubscriptionRegistry;
@@ -22,6 +24,10 @@ public class EntityManager {
 
     public <E extends Entity> E entity(DeviceId device, EntityDefinition<E> entityDefinition) {
         return entityDefinition.createEntity(this, device);
+    }
+
+    public BinarySensorEntity binarySensorEntity(EntityId entityId) {
+        return new BinarySensorEntity(client, entityId, entityChanges.getDispatcher(), BooleanMessage.onOff());
     }
 
     public CoverEntity coverEntity(EntityId entityId) {

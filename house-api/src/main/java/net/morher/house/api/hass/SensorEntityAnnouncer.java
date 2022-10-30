@@ -32,7 +32,7 @@ public class SensorEntityAnnouncer extends BaseEntityAnnouncer<SensorEntity<?>> 
             }
         }
 
-        entityConfig.setStateTopic(entity.getStateTopic());
+        entityConfig.setStateTopic(entity.state().getTopic());
 
         announceEntity(entityConfig);
     }

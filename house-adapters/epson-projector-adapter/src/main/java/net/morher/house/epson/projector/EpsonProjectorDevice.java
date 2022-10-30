@@ -30,19 +30,19 @@ public class EpsonProjectorDevice {
     }
 
     public void publishPower(boolean powerState) {
-        this.power.publishState(powerState);
+        this.power.state().publish(powerState);
     }
 
     public void publishAvMute(boolean avmuteState) {
-        this.avmute.publishState(avmuteState);
+        this.avmute.state().publish(avmuteState);
     }
 
     public void publishVolume(double volume) {
-        this.volume.publishState(volume);
+        this.volume.state().publish(volume);
     }
 
     public void publishLampHours(int lampHours) {
-        this.lampHours.publishState(lampHours);
+        this.lampHours.state().publish(lampHours);
     }
 
     public void registerCommandListener(ProjectorManager listener) {

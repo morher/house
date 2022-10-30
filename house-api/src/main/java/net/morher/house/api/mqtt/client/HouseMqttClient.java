@@ -18,4 +18,7 @@ public interface HouseMqttClient {
         return new MqttTopicManager<>(this, topicName, format);
     }
 
+    default <T> MqttTopicManager<T> topic(String topicName, PayloadFormat<T> format, boolean retainByDefault) {
+        return new MqttTopicManager<>(this, topicName, format, retainByDefault);
+    }
 }

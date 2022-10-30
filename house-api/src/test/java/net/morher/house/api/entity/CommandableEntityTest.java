@@ -14,11 +14,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import net.morher.house.api.entity.common.CommandableEntity;
-import net.morher.house.api.entity.common.EntityCommandListener;
 import net.morher.house.api.entity.common.EntityOptions;
 import net.morher.house.api.mqtt.MqttNamespace;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;
+import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
 import net.morher.house.api.mqtt.payload.RawMessage;
 
 public class CommandableEntityTest {
@@ -38,7 +38,7 @@ public class CommandableEntityTest {
         verify(namespace, times(1)).entityCommandTopic(entityCaptor.capture());
 
         assertThat(entityCaptor.getValue(), is(equalTo(ENTITY_ID)));
-        assertThat(testEntity.getCommandTopic(), is(equalTo("the/command/topic")));
+        assertThat(testEntity.command().getTopic(), is(equalTo("the/command/topic")));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CommandableEntityTest {
         doReturn(namespace).when(client).getNamespace();
 
         @SuppressWarnings("unchecked")
-        EntityCommandListener<String> listenerMock = mock(EntityCommandListener.class);
+        ParsedMqttMessageListener<String> listenerMock = mock(ParsedMqttMessageListener.class);
 
         TestCommandableEntity testEntity = testEntity(client);
         testEntity.command().subscribe(listenerMock);
@@ -77,9 +77,9 @@ public class CommandableEntityTest {
         verify(client, times(1)).subscribe(eq("house/room/device/entity/command"), listenerCaptor.capture());
 
         MqttMessageListener listener = listenerCaptor.getValue();
-        listener.onMessage("house/room/device/entity", "Test command".getBytes(), 0, true);
+        listener.onMessage("house/room/device/entity", "Test command".getBytes(), 0, false);
 
-        verify(listenerMock, times(1)).onCommand(eq("Test command"));
+        verify(listenerMock, times(1)).onMessage(any(), eq("Test command"), eq(0), eq(false));
     }
 
     protected TestCommandableEntity testEntity(HouseMqttClient client) {

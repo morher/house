@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.morher.house.api.entity.cover.CoverEntity;
+import net.morher.house.api.entity.cover.CoverOptions;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 
 public class CoverEntityAnnouncer extends BaseEntityAnnouncer<CoverEntity> {
@@ -17,12 +18,29 @@ public class CoverEntityAnnouncer extends BaseEntityAnnouncer<CoverEntity> {
 
     @Override
     protected void announceEntity(CoverEntity entity) {
-        if (entity.getOptions() != null) {
+        CoverOptions options = entity.getOptions();
+        if (options != null) {
             CoverEntityConfig entityConfig = new CoverEntityConfig();
             fillDefaults(entity, entityConfig);
 
-            entityConfig.setStateTopic(entity.getStateTopic());
-            entityConfig.setCommandTopic(entity.getCommandTopic());
+            entityConfig.setStateTopic(entity.state().getTopic());
+            entityConfig.setCommandTopic(entity.command().getTopic());
+
+            if (options.isPosition()) {
+                entityConfig.setPositionTopic(entity.position().state().getTopic());
+                entityConfig.setPositionCommandTopic(entity.position().command().getTopic());
+            }
+
+            if (options.isTilt()) {
+                entityConfig.setTiltTopic(entity.tilt().state().getTopic());
+                entityConfig.setTiltCommandTopic(entity.tilt().command().getTopic());
+            }
+
+            if (options.isInvertDirection()) {
+                entityConfig.setPositionOpen(0);
+                entityConfig.setPositionClosed(100);
+            }
+
             announceEntity(entityConfig);
         }
     }
@@ -32,10 +50,28 @@ public class CoverEntityAnnouncer extends BaseEntityAnnouncer<CoverEntity> {
     @JsonInclude(Include.NON_NULL)
     public static class CoverEntityConfig extends BaseEntityConfig {
         @JsonProperty("cmd_t")
-        public String commandTopic;
+        private String commandTopic;
 
         @JsonProperty("stat_t")
-        public String stateTopic;
+        private String stateTopic;
+
+        @JsonProperty("pos_t")
+        private String positionTopic;
+
+        @JsonProperty("set_pos_t")
+        private String positionCommandTopic;
+
+        @JsonProperty("tilt_t")
+        private String tiltTopic;
+
+        @JsonProperty("tilt_cmd_t")
+        private String tiltCommandTopic;
+
+        @JsonProperty("position_closed")
+        private int positionClosed = 0;
+
+        @JsonProperty("position_open")
+        private int positionOpen = 100;
 
         @Override
         public String getEntityClass() {

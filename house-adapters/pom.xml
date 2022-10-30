@@ -20,6 +20,8 @@
 		<module>epson-projector-adapter</module>
 		<module>miele-adapter</module>
 		<module>modes-adapter</module>
+		<module>presence-adapter</module>
+		<module>raspberrypi-adapter</module>
 		<module>shelly-adapter</module>
 		<module>tasmota-adapter</module>
 		<module>wizlight-adapter</module>

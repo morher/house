@@ -40,7 +40,7 @@ public abstract class BaseStateHandler<S, O extends EntityOptions, C> {
         }
         currentState = modifyState(currentState, command);
         delegate.onStateUpdated(currentState);
-        entity.publishState(currentState);
+        entity.state().publish(currentState);
     }
 
     protected void handleStateReceived(S lampState) {
@@ -59,7 +59,7 @@ public abstract class BaseStateHandler<S, O extends EntityOptions, C> {
         S prevState = currentState;
         this.currentState = state;
         if (!currentState.equals(prevState)) {
-            entity.publishState(state);
+            entity.state().publish(state);
         }
     }
 
