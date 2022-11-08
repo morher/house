@@ -72,6 +72,13 @@ public class DefaultMqttStub implements MqttStub {
         return subscription;
     }
 
+    public boolean isSubscribedTo(String topicFilter) {
+        return subscriptions.stream()
+                .filter(s -> s.getTopicFilter().equals(topicFilter))
+                .findAny()
+                .isPresent();
+    }
+
     @Data
     private class TestSubscription implements Subscription {
 

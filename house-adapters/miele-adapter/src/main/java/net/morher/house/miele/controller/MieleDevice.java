@@ -44,10 +44,10 @@ public class MieleDevice {
     }
 
     public void updateDevice(MieleDeviceInfo info) {
-        statusEntity.publishState(info.getState().getStatus().getName());
-        phaseEntity.publishState(programPhase(info));
-        remainingTimeEntity.publishState(remainingTime(info));
-        estimatedCompleteTimeEntity.publishState(estimatedCompleteTime(info));
+        statusEntity.state().publish(info.getState().getStatus().getName());
+        phaseEntity.state().publish(programPhase(info));
+        remainingTimeEntity.state().publish(remainingTime(info));
+        estimatedCompleteTimeEntity.state().publish(estimatedCompleteTime(info));
     }
 
     private static String programPhase(MieleDeviceInfo info) {

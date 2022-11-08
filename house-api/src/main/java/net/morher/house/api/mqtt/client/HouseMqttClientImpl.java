@@ -23,7 +23,7 @@ import net.morher.house.api.subscription.Subscription;
 
 @Slf4j
 public class HouseMqttClientImpl implements HouseMqttClient {
-    protected final ScheduledExecutorService scheduler = HouseScheduler.get("mqtt-client");
+    protected final ScheduledExecutorService scheduler = HouseScheduler.get();
     private final Queue<Message> outgoingQueue = new ConcurrentLinkedQueue<Message>();
     private final Map<String, TopicSubscription> topicSubscriptions = new HashMap<>();
     private final MqttConnection mqttConnection;
@@ -192,7 +192,7 @@ public class HouseMqttClientImpl implements HouseMqttClient {
                 MqttOptions options = this.options;
                 client = clientFactory.connect(options, availabilityPolicy, this);
 
-                log.info("Connceted to MQTT-server {} as {}", client.getServerURI(), options.getUsername());
+                log.info("Connected to MQTT-server {} as {}", client.getServerURI(), options.getUsername());
 
                 scheduler.execute(HouseMqttClientImpl.this::syncSubscriptions);
                 scheduler.execute(HouseMqttClientImpl.this::publishMessages);
@@ -240,24 +240,41 @@ public class HouseMqttClientImpl implements HouseMqttClient {
         private final String topicFilter;
         private final List<MqttMessageListener> listeners = new ArrayList<>();
         private boolean registered;
+        private Map<String, MqttMessage> retainedMessages = new HashMap<>();
 
         public TopicSubscription(String topic) {
             this.topicFilter = topic;
         }
 
         public void dispatchMessage(String topic, MqttMessage message) {
+            updateRetainedMessages(topic, message);
             for (MqttMessageListener listener : listeners) {
-                try {
-                    listener.onMessage(topic, message.getPayload(), message.getQos(), message.isRetained());
+                dispatchMessage(topic, message, listener);
+            }
+        }
 
-                } catch (Exception e) {
-                    log.error("Exception in message listener: {}", e.getMessage(), e);
-                }
+        private void updateRetainedMessages(String topic, MqttMessage message) {
+            if (message.isRetained()) {
+                retainedMessages.put(topic, message);
+            } else {
+                retainedMessages.remove(topic);
+            }
+        }
+
+        private void dispatchMessage(String topic, MqttMessage message, MqttMessageListener listener) {
+            try {
+                listener.onMessage(topic, message.getPayload(), message.getQos(), message.isRetained());
+
+            } catch (Exception e) {
+                log.error("Exception in message listener: {}", e.getMessage(), e);
             }
         }
 
         public void registerListener(MqttMessageListener listener) {
             listeners.add(listener);
+            for (Map.Entry<String, MqttMessage> retainedMessage : retainedMessages.entrySet()) {
+                dispatchMessage(retainedMessage.getKey(), retainedMessage.getValue(), listener);
+            }
         }
 
         public void removeListener(MqttMessageListener listener) {

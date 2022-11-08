@@ -1,48 +1,30 @@
 package net.morher.house.api.schedule;
 
-import java.util.concurrent.Executors;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
-import lombok.extern.slf4j.Slf4j;
+import net.morher.house.api.state.DelayedStateChange;
 
-@Slf4j
-public class HouseScheduler {
+public interface HouseScheduler extends ScheduledExecutorService {
 
-    public static ScheduledExecutorService get(String name) {
-        return new ExceptionHandlingSchedulerWrapper(
-                Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name)),
-                HouseScheduler::handleException);
+    public static HouseScheduler get() {
+        return HouseSchedulerLocator.get();
     }
 
-    private static void handleException(Throwable e, Object task) {
-        log.error("Execption while performing task '{}':", task, e.getMessage(), e);
+    @Deprecated
+    public static HouseScheduler get(String name) {
+        return HouseSchedulerLocator.get();
     }
 
-    private static class NamedThreadFactory implements ThreadFactory {
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
+    Instant now();
 
-        NamedThreadFactory(String name) {
-            SecurityManager s = System.getSecurityManager();
-            group = (s != null)
-                    ? s.getThreadGroup()
-                    : Thread.currentThread().getThreadGroup();
-            this.namePrefix = name + "-";
-        }
-
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r,
-                    namePrefix + threadNumber.getAndIncrement(),
-                    0);
-            if (t.isDaemon())
-                t.setDaemon(false);
-            if (t.getPriority() != Thread.NORM_PRIORITY)
-                t.setPriority(Thread.NORM_PRIORITY);
-            return t;
-        }
+    default DelayedTrigger delayedTrigger(String name, ScheduledRunnable task) {
+        return new DelayedTrigger(this, new NamedTask(task, name));
     }
 
+    default <T> DelayedStateChange<T> delayedStateChange(Consumer<? super T> listener, Duration defaultDelay) {
+        return new DelayedStateChange<>(this, listener, defaultDelay);
+    }
 }

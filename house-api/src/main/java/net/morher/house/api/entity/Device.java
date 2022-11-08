@@ -4,19 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Data;
+import lombok.Getter;
 import net.morher.house.api.entity.common.ConfigurableEntity;
 import net.morher.house.api.entity.common.EntityOptions;
 
 public class Device {
     private final EntityManager entityManager;
-    private final DeviceId deviceId;
+    @Getter
+    private final DeviceId id;
     private DeviceInfo deviceInfo;
 
     private final Map<String, SubEntityEntry<?>> entities = new HashMap<>();
 
     public Device(EntityManager entityManager, DeviceId deviceId) {
         this.entityManager = entityManager;
-        this.deviceId = deviceId;
+        this.id = deviceId;
     }
 
     @SuppressWarnings("unchecked")
@@ -29,7 +31,7 @@ public class Device {
             return (E) entry.getEntity();
 
         }
-        E entity = entityDefinition.createEntity(entityManager, deviceId);
+        E entity = entityDefinition.createEntity(entityManager, id);
         entities.put(entityDefinition.getEntityName(), new SubEntityEntry<>(entityDefinition, entity));
         if (deviceInfo != null) {
             entity.setDeviceInfo(deviceInfo);

@@ -1,5 +1,7 @@
 package net.morher.house.tasmota.node;
 
+import static net.morher.house.api.mqtt.payload.NumberMessage.integer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import net.morher.house.api.entity.light.LightState;
 import net.morher.house.api.entity.light.LightState.PowerState;
 import net.morher.house.api.entity.light.LightStateHandler;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
-import net.morher.house.api.mqtt.payload.NumberMessage;
+import net.morher.house.api.mqtt.client.Topic;
 
 public class TasmotaLampDevice {
     private final String node;
@@ -29,7 +31,8 @@ public class TasmotaLampDevice {
     }
 
     public void addDimmerChannel(int dimmer, String channel) {
-        channels.add(new LampDimmerChannel("cmnd/" + node + "/channel" + dimmer));
+        Topic<Integer> topic = client.topic("cmnd/" + node + "/channel" + dimmer, integer(), false);
+        channels.add(new LampDimmerChannel(topic));
     }
 
     public void onLightState(LightState lightState) {
@@ -39,12 +42,12 @@ public class TasmotaLampDevice {
 
     @RequiredArgsConstructor
     private class LampDimmerChannel {
-        private final String topic;
+        private final Topic<Integer> topic;
 
         void updateState(LightState lightState) {
             Integer brightness = toBrightness(lightState);
             if (brightness != null) {
-                client.publish(topic, NumberMessage.integer().serialize(brightness), false);
+                topic.publish(brightness);
             }
         }
 

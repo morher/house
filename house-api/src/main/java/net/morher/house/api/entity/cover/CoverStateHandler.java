@@ -1,12 +1,11 @@
 package net.morher.house.api.entity.cover;
 
-import net.morher.house.api.entity.common.CommandableEntity;
 import net.morher.house.api.entity.common.EntityStateListener;
 import net.morher.house.api.entity.light.BaseStateHandler;
 
 public class CoverStateHandler extends BaseStateHandler<CoverState, CoverOptions, CoverCommand> {
 
-    public CoverStateHandler(CommandableEntity<CoverState, CoverOptions, CoverCommand> entity, EntityStateListener<? super CoverState> delegate) {
+    public CoverStateHandler(CoverEntity entity, EntityStateListener<? super CoverState> delegate) {
         super(entity, delegate, CoverState.STOPPED);
     }
 

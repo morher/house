@@ -6,30 +6,30 @@ import net.morher.house.api.entity.light.LightState;
 import net.morher.house.api.entity.light.LightState.PowerState;
 import net.morher.house.api.entity.light.LightStateHandler;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
-import net.morher.house.api.mqtt.client.MqttTopicManager;
+import net.morher.house.api.mqtt.client.Topic;
 import net.morher.house.api.mqtt.payload.BooleanMessage;
+import net.morher.house.api.subscription.Subscription;
 
 public class ShellyLamp {
-    private final MqttTopicManager<Boolean> stateTopic;
-    private final MqttTopicManager<Boolean> commandTopic;
+    private final Topic<Boolean> commandTopic;
+    private final Subscription stateSubscription;
     private LightStateHandler handler;
 
     public ShellyLamp(HouseMqttClient mqtt, String nodeName, int relayIndex, LightEntity lightEntity) {
         String relayTopic = "shellies/" + nodeName + "/relay/" + relayIndex;
-        commandTopic = new MqttTopicManager<>(mqtt, relayTopic + "/command", BooleanMessage.onOffLowerCase(), null);
-        stateTopic = new MqttTopicManager<>(mqtt, relayTopic, BooleanMessage.onOffLowerCase(), this::onRelayStateChanged);
+        commandTopic = mqtt.topic(relayTopic + "/command", BooleanMessage.onOffLowerCase(), false);
+        stateSubscription = mqtt.topic(relayTopic, BooleanMessage.onOffLowerCase()).subscribe(this::onRelayStateChanged);
 
         handler = new LightStateHandler(lightEntity, this::onLightState);
         lightEntity.setOptions(new LightOptions(false, null));
 
-        stateTopic.activateSubscription(true);
     }
 
     public void onLightState(LightState lampState) {
-        commandTopic.publish(PowerState.ON.equals(lampState.getState()), false);
+        commandTopic.publish(PowerState.ON.equals(lampState.getState()));
     }
 
-    public void onRelayStateChanged(String topic, Boolean data, int qos, boolean retained) {
+    public void onRelayStateChanged(Boolean data) {
         handler.updateState(new LightState(data ? PowerState.ON : PowerState.OFF, null, null));
     }
 }

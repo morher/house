@@ -4,17 +4,20 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.function.Consumer;
+
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import net.morher.house.api.entity.common.EntityOptions;
-import net.morher.house.api.entity.common.EntityStateListener;
 import net.morher.house.api.entity.common.StatefullEntity;
 import net.morher.house.api.mqtt.MqttNamespace;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
@@ -31,6 +34,7 @@ public class StatefullEntityTest {
 
         HouseMqttClient client = mock(HouseMqttClient.class);
         doReturn(namespace).when(client).getNamespace();
+        doCallRealMethod().when(client).topic(any(), any(), anyBoolean());
 
         TestStatefullEntity testEntity = testEntity(client);
 
@@ -38,7 +42,7 @@ public class StatefullEntityTest {
         verify(namespace, times(1)).entityStateTopic(entityCaptor.capture());
 
         assertThat(entityCaptor.getValue(), is(equalTo(ENTITY_ID)));
-        assertThat(testEntity.getStateTopic(), is(equalTo("the/state/topic")));
+        assertThat(testEntity.state().getTopic(), is(equalTo("the/state/topic")));
     }
 
     @Test
@@ -46,8 +50,9 @@ public class StatefullEntityTest {
         MqttNamespace namespace = MqttNamespace.defaultNamespace();
         HouseMqttClient client = mock(HouseMqttClient.class);
         doReturn(namespace).when(client).getNamespace();
+        doCallRealMethod().when(client).topic(any(), any(), anyBoolean());
 
-        testEntity(client).publishState("Test state!");
+        testEntity(client).state().publish("Test state!");
 
         ArgumentCaptor<String> topic = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<byte[]> payload = ArgumentCaptor.forClass(byte[].class);
@@ -66,9 +71,10 @@ public class StatefullEntityTest {
         MqttNamespace namespace = MqttNamespace.defaultNamespace();
         HouseMqttClient client = mock(HouseMqttClient.class);
         doReturn(namespace).when(client).getNamespace();
+        doCallRealMethod().when(client).topic(any(), any(), anyBoolean());
 
         @SuppressWarnings("unchecked")
-        EntityStateListener<String> listenerMock = mock(EntityStateListener.class);
+        Consumer<String> listenerMock = mock(Consumer.class);
 
         TestStatefullEntity testEntity = testEntity(client);
         testEntity.state().subscribe(listenerMock);
@@ -79,9 +85,7 @@ public class StatefullEntityTest {
         MqttMessageListener listener = listenerCaptor.getValue();
         listener.onMessage("house/room/device/entity", "Test state".getBytes(), 0, true);
 
-        verify(listenerMock, times(1)).onStateUpdated(eq("Test state"));
-
-        assertThat(testEntity.getCurrentState(), is(equalTo("Test state")));
+        verify(listenerMock, times(1)).accept(eq("Test state"));
     }
 
     protected TestStatefullEntity testEntity(HouseMqttClient client) {

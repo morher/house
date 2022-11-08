@@ -3,20 +3,20 @@ package net.morher.house.wled;
 import java.util.ArrayList;
 
 import lombok.extern.slf4j.Slf4j;
-import net.morher.house.api.mqtt.client.MqttTopicManager;
+import net.morher.house.api.mqtt.client.Topic;
 import net.morher.house.wled.to.WledNodeState;
 import net.morher.house.wled.to.WledSegment;
 
 @Slf4j
 public class WledNode {
-    private final MqttTopicManager<WledNodeState> topic;
+    private final Topic<WledNodeState> topic;
 
-    public WledNode(MqttTopicManager<WledNodeState> topic) {
+    public WledNode(Topic<WledNodeState> topic) {
         this.topic = topic;
     }
 
     public synchronized void updateSegment(int segmentId, LedStripState state) {
-        log.debug("Update " + topic.getTopic() + " segment " + segmentId);
+        log.debug("Update " + topic.getTopic() + " segment " + segmentId, false);
 
         WledNodeState nodeState = new WledNodeState();
         nodeState.setPowerOn(true);
@@ -34,7 +34,7 @@ public class WledNode {
         nodeState.getSegments().add(seg);
         nodeState.setVerboseResponse(false);
 
-        topic.publish(nodeState, false);
+        topic.publish(nodeState);
     }
 
     private static int[][] createColorsArray(LedStripState state) {

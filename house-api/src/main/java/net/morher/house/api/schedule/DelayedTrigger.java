@@ -4,9 +4,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
@@ -14,19 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DelayedTrigger {
     private final Runnable scheduleCallback = this::considerRun;
-    private final Runnable task;
-    private final ScheduledExecutorService scheduler;
-    private final Supplier<Instant> timeProvider;
+    private final HouseScheduler scheduler;
+    private final ScheduledRunnable task;
     private Instant nextExecution;
 
-    public DelayedTrigger(Runnable task, ScheduledExecutorService scheduler, Supplier<Instant> timeProvider) {
-        this.task = task;
+    public DelayedTrigger(HouseScheduler scheduler, ScheduledRunnable task) {
         this.scheduler = scheduler;
-        this.timeProvider = timeProvider;
-    }
-
-    public DelayedTrigger(Runnable task, ScheduledExecutorService scheduler) {
-        this(task, scheduler, Instant::now);
+        this.task = task;
     }
 
     @Synchronized
@@ -36,21 +28,24 @@ public class DelayedTrigger {
 
     @Synchronized
     public void runAt(Instant time) {
+        if (time == null) {
+            time = scheduler.now();
+        }
         log.trace("Update next execution of task '{}' from {} to {}", task, nextExecution, time);
         nextExecution = time;
         scheduler.execute(scheduleCallback);
     }
 
     public void runAfter(Duration duration) {
-        runAt(timeProvider.get().plus(duration));
+        runAt(scheduler.now().plus(duration));
     }
 
     public void runAfter(long delay, TemporalUnit unit) {
-        runAt(timeProvider.get().plus(delay, unit));
+        runAt(scheduler.now().plus(delay, unit));
     }
 
     public void runNow() {
-        runAt(timeProvider.get());
+        runAt(scheduler.now());
     }
 
     @Synchronized
@@ -59,7 +54,7 @@ public class DelayedTrigger {
             log.trace("No planned execution of task '{}'", task);
             return;
         }
-        Instant now = timeProvider.get();
+        Instant now = scheduler.now();
         if (now.isBefore(nextExecution)) {
             long waitMs = ChronoUnit.MILLIS.between(now, nextExecution);
             log.trace("Next execution time for task '{}' not reached. Schedule new attempt in {} ms", task, waitMs);
@@ -68,6 +63,11 @@ public class DelayedTrigger {
         }
         log.debug("Executing task '{}'", task);
         nextExecution = null;
-        scheduler.execute(task);
+        try {
+            task.runScheduled();
+
+        } catch (Reschedule r) {
+            runAt(r.getRescheduleAt());
+        }
     }
 }

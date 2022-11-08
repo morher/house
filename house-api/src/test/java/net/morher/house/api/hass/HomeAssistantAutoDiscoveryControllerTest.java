@@ -5,6 +5,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -29,6 +32,7 @@ public class HomeAssistantAutoDiscoveryControllerTest {
         MqttNamespace namespace = MqttNamespace.defaultNamespace();
         HouseMqttClient client = mock(HouseMqttClient.class);
         doReturn(namespace).when(client).getNamespace();
+        doCallRealMethod().when(client).topic(any(), any(), anyBoolean());
 
         SwitchEntity entity = new SwitchEntity(client, ENTITY_ID, null);
         entity.setDeviceInfo(new DeviceInfo());

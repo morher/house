@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ScheduledExecutorService;
 
 import lombok.extern.slf4j.Slf4j;
 import net.morher.house.api.entity.Device;
@@ -12,7 +11,6 @@ import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.schedule.DelayedTrigger;
 import net.morher.house.api.schedule.HouseScheduler;
-import net.morher.house.api.schedule.NamedTask;
 import net.morher.house.miele.config.MieleAdapterConfiguration.MieleConfig;
 import net.morher.house.miele.config.MieleAdapterConfiguration.MieleDeviceConfig;
 import net.morher.house.miele.consumer.MieleConsumer;
@@ -20,8 +18,8 @@ import net.morher.house.miele.domain.MieleDeviceInfo;
 
 @Slf4j
 public class MieleController {
-    private final ScheduledExecutorService scheduler = HouseScheduler.get("Miele Adapter");
-    private final DelayedTrigger checkStatusTrigger = new DelayedTrigger(new NamedTask(this::updateDevices, "Update Miele devices"), scheduler);
+    private final HouseScheduler scheduler = HouseScheduler.get();
+    private final DelayedTrigger checkStatusTrigger = scheduler.delayedTrigger("Update Miele devices", this::updateDevices);
     private final MieleConsumer consumer;
     private final DeviceManager deviceManager;
     private final Map<String, MieleDevice> devices = new HashMap<>();

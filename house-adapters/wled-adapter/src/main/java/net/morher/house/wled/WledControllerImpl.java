@@ -11,7 +11,6 @@ import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
-import net.morher.house.api.mqtt.client.MqttTopicManager;
 import net.morher.house.api.mqtt.payload.JsonMessage;
 import net.morher.house.api.schedule.HouseScheduler;
 import net.morher.house.wled.config.WledConfiguration;
@@ -53,7 +52,7 @@ public class WledControllerImpl {
     }
 
     private WledNode findOrCreateNode(String topic) {
-        return new WledNode(new MqttTopicManager<>(mqtt, topic + "/api", JsonMessage.toType(WledNodeState.class), null));
+        return new WledNode(mqtt.topic(topic + "/api", JsonMessage.toType(WledNodeState.class)));
     }
 
     public WledLedStrip getStrip(String stripId) {

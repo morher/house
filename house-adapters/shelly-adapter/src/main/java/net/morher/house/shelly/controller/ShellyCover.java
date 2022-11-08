@@ -9,7 +9,7 @@ import net.morher.house.api.entity.cover.CoverState;
 import net.morher.house.api.entity.cover.CoverStateHandler;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.schedule.DelayedTrigger;
-import net.morher.house.api.schedule.NamedTask;
+import net.morher.house.api.schedule.HouseScheduler;
 
 @Slf4j
 public class ShellyCover {
@@ -21,7 +21,7 @@ public class ShellyCover {
     private final CoverStateHandler stateHandler;
     private CoverState currentState;
 
-    public ShellyCover(ScheduledExecutorService scheduler, HouseMqttClient mqtt, String nodeName, CoverEntity entity) {
+    public ShellyCover(HouseScheduler scheduler, HouseMqttClient mqtt, String nodeName, CoverEntity entity) {
 
         topics = new ShellyCoverTopics(mqtt, nodeName, this::onPowerUpdate);
 
@@ -29,7 +29,7 @@ public class ShellyCover {
         stateHandler.setDeviceInfo(null);
 
         this.scheduler = scheduler;
-        motorTimeoutTrigger = new DelayedTrigger(new NamedTask(this::stopAtEnd, "Motor timeout"), scheduler);
+        motorTimeoutTrigger = scheduler.delayedTrigger("Motor timeout", this::stopAtEnd);
     }
 
     private void stopAtEnd() {

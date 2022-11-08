@@ -13,7 +13,6 @@ import net.morher.house.api.entity.Device;
 import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
-import net.morher.house.api.mqtt.client.MqttMessageListener;
 import net.morher.house.api.mqtt.payload.JsonMessage;
 import net.morher.house.tasmota.config.TasmotaConfiguration;
 import net.morher.house.tasmota.config.TasmotaConfiguration.SensorConfiguration;
@@ -29,11 +28,7 @@ public class TasmotaSensorController {
 
     public TasmotaSensorController(HouseMqttClient client, DeviceManager deviceManager) {
         this.deviceManager = deviceManager;
-        client.subscribe(
-                "tele/+/SENSOR",
-                MqttMessageListener
-                        .map(JsonMessage.toJsonNode())
-                        .thenNotify(this::onMessage));
+        client.topic("tele/+/SENSOR", JsonMessage.toJsonNode()).subscribe(this::onMessage);
     }
 
     public void configure(TasmotaConfiguration config) {
@@ -54,7 +49,7 @@ public class TasmotaSensorController {
         sensorsByName.put(sensorConfiguration.getName(), tasmotaSensor);
     }
 
-    private void onMessage(String topic, JsonNode data, int qos, boolean retained) {
+    private void onMessage(JsonNode data) {
         Iterable<Entry<String, JsonNode>> fields = () -> data.fields();
         for (Entry<String, JsonNode> field : fields) {
             String key = field.getKey();

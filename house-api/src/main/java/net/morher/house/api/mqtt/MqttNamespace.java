@@ -20,7 +20,15 @@ public interface MqttNamespace {
 
     String entityCommandTopic(EntityId entityId);
 
+    String entityPositionTopic(EntityId entityId);
+
+    String entityPositionCommandTopic(EntityId entityId);
+
     String entityStateTopic(EntityId entityId);
+
+    String entityTiltTopic(EntityId entityId);
+
+    String entityTiltCommandTopic(EntityId entityId);
 
     String entityTriggerTopic(EntityId entityId);
 

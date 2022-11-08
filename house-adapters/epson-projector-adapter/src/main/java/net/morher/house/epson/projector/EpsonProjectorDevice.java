@@ -29,20 +29,36 @@ public class EpsonProjectorDevice {
         lampHours = device.entity(AudioVideoDevice.LAMP_HOURS, new SensorOptions(SensorType.DURATION_H));
     }
 
+    public SwitchEntity power() {
+        return power;
+    }
+
     public void publishPower(boolean powerState) {
-        this.power.publishState(powerState);
+        this.power.state().publish(powerState);
+    }
+
+    public SwitchEntity avmute() {
+        return avmute;
     }
 
     public void publishAvMute(boolean avmuteState) {
-        this.avmute.publishState(avmuteState);
+        this.avmute.state().publish(avmuteState);
+    }
+
+    public DecimalEntity volume() {
+        return volume;
     }
 
     public void publishVolume(double volume) {
-        this.volume.publishState(volume);
+        this.volume.state().publish(volume);
+    }
+
+    public SensorEntity<Integer> lampHours() {
+        return lampHours;
     }
 
     public void publishLampHours(int lampHours) {
-        this.lampHours.publishState(lampHours);
+        this.lampHours.state().publish(lampHours);
     }
 
     public void registerCommandListener(ProjectorManager listener) {

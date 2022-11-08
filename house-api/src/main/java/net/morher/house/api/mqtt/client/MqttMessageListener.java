@@ -22,7 +22,10 @@ public interface MqttMessageListener {
 
         @Override
         public void onMessage(String topic, byte[] data, int qos, boolean retained) {
-            listener.onMessage(topic, mapper.deserialize(data), qos, retained);
+            T value = mapper.deserialize(data);
+            if (value != null) {
+                listener.onMessage(topic, value, qos, retained);
+            }
         }
     }
 

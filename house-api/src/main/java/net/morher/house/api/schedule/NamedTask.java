@@ -1,17 +1,37 @@
 package net.morher.house.api.schedule;
 
-public class NamedTask implements Runnable {
-    private final Runnable delegate;
+public class NamedTask implements Runnable, ScheduledRunnable {
+    private final Object delegate;
     private final String name;
 
-    public NamedTask(Runnable delegate, String name) {
+    public NamedTask(ScheduledRunnable delegate, String name) {
         this.delegate = delegate;
         this.name = name;
     }
 
     @Override
     public void run() {
-        delegate.run();
+        if (delegate instanceof ScheduledRunnable) {
+            try {
+                ((ScheduledRunnable) delegate).runScheduled();
+
+            } catch (Reschedule r) {
+                throw new RuntimeException("Not run in reschedulable context", r);
+            }
+        }
+        if (delegate instanceof Runnable) {
+            ((Runnable) delegate).run();
+        }
+    }
+
+    @Override
+    public void runScheduled() throws Reschedule {
+        if (delegate instanceof ScheduledRunnable) {
+            ((ScheduledRunnable) delegate).runScheduled();
+        }
+        if (delegate instanceof Runnable) {
+            ((Runnable) delegate).run();
+        }
     }
 
     @Override

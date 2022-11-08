@@ -1,7 +1,5 @@
 package net.morher.house.shelly.controller;
 
-import java.util.concurrent.ScheduledExecutorService;
-
 import net.morher.house.api.devicetypes.CoverDevice;
 import net.morher.house.api.devicetypes.GeneralDevice;
 import net.morher.house.api.devicetypes.LampDevice;
@@ -22,7 +20,7 @@ import net.morher.house.shelly.config.ShellyConfig.ShellyRelayConfig;
 import net.morher.house.shelly.config.ShellyConfig.ShellySwitchConfig;
 
 public class ShellyController {
-    private final ScheduledExecutorService scheduler = HouseScheduler.get("Shelly Operations");
+    private final HouseScheduler scheduler = HouseScheduler.get();
     private final HouseMqttClient client;
     private final DeviceManager deviceManager;
 

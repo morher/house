@@ -1,5 +1,9 @@
 package net.morher.house.buttons.controller;
 
+import static net.morher.house.api.mqtt.payload.BooleanMessage.onOff;
+
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +17,8 @@ import net.morher.house.api.entity.DeviceManager;
 import net.morher.house.api.entity.trigger.TriggerEntity;
 import net.morher.house.api.entity.trigger.TriggerOptions;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
-import net.morher.house.api.mqtt.client.MqttMessageListener;
-import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
-import net.morher.house.api.mqtt.payload.JsonMessage;
-import net.morher.house.api.mqtt.payload.RawMessage;
+import net.morher.house.api.subscription.Subscribable;
+import net.morher.house.api.subscription.Subscription;
 import net.morher.house.buttons.action.Action;
 import net.morher.house.buttons.action.ActionBuilder;
 import net.morher.house.buttons.action.Trigger;
@@ -63,7 +65,6 @@ public class ButtonsController {
             TriggerOptions options = new TriggerOptions();
             for (Map.Entry<String, String> action : triggerConfig.getActionMapping().entrySet()) {
                 options.getAvailableEvents().add(action.getKey());
-                System.out.println("Action: " + action.getValue());
                 triggers.put(action.getValue(), new Trigger(entity, action.getKey()));
             }
             DeviceInfo deviceInfo = new DeviceInfo();
@@ -79,7 +80,12 @@ public class ButtonsController {
     }
 
     private void configureInput(InputConfig config, Map<String, TemplateConfig> templates) {
-        ButtonInput input = new ButtonInput(config.isInverted());
+
+        Subscribable<Boolean> topic = client.topic(
+                config.getTopic(),
+                onOff().inverted(config.isInverted()).inJsonField(config.getProperty()));
+
+        ButtonInput input = new ButtonInput(topic);
 
         Map<String, List<ActionConfig>> events = new HashMap<>();
         addEventsFromTemplates(events, config.getTemplates(), templates);
@@ -93,19 +99,7 @@ public class ButtonsController {
             input.putEvent(eventType, action);
         }
 
-        client.subscribe(config.getTopic(), inputListener(input, config));
         inputs.add(input);
-    }
-
-    private MqttMessageListener inputListener(ButtonInput input, InputConfig config) {
-        if (config.getProperty() != null) {
-            return MqttMessageListener
-                    .map(JsonMessage.toJsonNode())
-                    .thenNotify(new PropertyFilter(config.getProperty(), input));
-        }
-        return MqttMessageListener
-                .map(RawMessage.toStr())
-                .thenNotify(input);
     }
 
     private void addEventsFromTemplates(
@@ -125,28 +119,18 @@ public class ButtonsController {
 
     }
 
-    private class ButtonInput implements ButtonListener, ParsedMqttMessageListener<String> {
+    private class ButtonInput implements ButtonListener, Closeable {
         private Map<String, Action> eventAction = new HashMap<>();
         private final Button button;
-        private final List<String> pressedPayloads = new ArrayList<>();
+        private final Subscription subscription;
 
-        public ButtonInput(boolean inverted) {
-            pressedPayloads.add("on");
-            pressedPayloads.add("1");
-            Button button = buttonManager.createButton(this);
-            if (inverted) {
-                button = button.inverted();
-            }
-            this.button = button;
+        public ButtonInput(Subscribable<Boolean> topic) {
+            button = buttonManager.createButton(this);
+            subscription = topic.subscribe(button::reportState);
         }
 
         public void putEvent(String eventType, Action action) {
             eventAction.put(eventType, action);
-        }
-
-        @Override
-        public void onMessage(String topic, String data, int qos, boolean retained) {
-            button.reportState(pressedPayloads.contains(data.toLowerCase()));
         }
 
         @Override
@@ -168,6 +152,11 @@ public class ButtonsController {
             for (Action action : eventAction.values()) {
                 action.storePreEventState();
             }
+        }
+
+        @Override
+        public void close() throws IOException {
+            subscription.unsubscribe();
         }
     }
 }

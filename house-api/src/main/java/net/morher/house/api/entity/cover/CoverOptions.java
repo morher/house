@@ -13,4 +13,8 @@ public class CoverOptions extends EntityOptions {
      * means up.
      */
     private boolean invertDirection;
+
+    private boolean position;
+
+    private boolean tilt;
 }

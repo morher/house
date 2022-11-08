@@ -21,8 +21,8 @@ public class SwitchEntityAnnouncer extends BaseEntityAnnouncer<SwitchEntity> {
             SwitchEntityConfig entityConfig = new SwitchEntityConfig();
             fillDefaults(entity, entityConfig);
 
-            entityConfig.setStateTopic(entity.getStateTopic());
-            entityConfig.setCommandTopic(entity.getCommandTopic());
+            entityConfig.setStateTopic(entity.state().getTopic());
+            entityConfig.setCommandTopic(entity.command().getTopic());
             announceEntity(entityConfig);
         }
     }

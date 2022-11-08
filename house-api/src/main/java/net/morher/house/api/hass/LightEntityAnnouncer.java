@@ -30,8 +30,8 @@ public class LightEntityAnnouncer extends BaseEntityAnnouncer<LightEntity> {
             entityConfig.effectList = options.getEffects();
             entityConfig.effect = entityConfig.effectList != null && !entityConfig.effectList.isEmpty();
         }
-        entityConfig.setStateTopic(entity.getStateTopic());
-        entityConfig.setCommandTopic(entity.getCommandTopic());
+        entityConfig.setStateTopic(entity.state().getTopic());
+        entityConfig.setCommandTopic(entity.command().getTopic());
 
         announceEntity(entityConfig);
     }

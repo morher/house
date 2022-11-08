@@ -1,11 +1,10 @@
 package net.morher.house.buttons.action;
 
 import net.morher.house.api.entity.EntityId;
-import net.morher.house.api.entity.common.EntityStateListener;
 import net.morher.house.api.entity.common.StatefullEntity;
 import net.morher.house.api.entity.light.LightState;
 
-public class LightCondition implements Condition, EntityStateListener<LightState> {
+public class LightCondition implements Condition {
     private final EntityId entityId;
     private final LightState conditionState;
     private LightState currentState = new LightState();
@@ -13,7 +12,7 @@ public class LightCondition implements Condition, EntityStateListener<LightState
 
     public LightCondition(StatefullEntity<LightState, ?> lamp, LightState conditionState) {
         this.entityId = lamp.getId();
-        lamp.state().subscribe(this);
+        lamp.state().subscribe(this::onStateUpdated);
         this.conditionState = conditionState;
     }
 
@@ -22,8 +21,7 @@ public class LightCondition implements Condition, EntityStateListener<LightState
         preEventState = currentState;
     }
 
-    @Override
-    public void onStateUpdated(LightState state) {
+    void onStateUpdated(LightState state) {
         this.currentState = state;
     }
 

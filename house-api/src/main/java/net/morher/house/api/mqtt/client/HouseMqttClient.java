@@ -14,8 +14,11 @@ public interface HouseMqttClient {
 
     Subscription subscribe(String topic, MqttMessageListener listener);
 
-    default <T> MqttTopicManager<T> topic(String topicName, PayloadFormat<T> format) {
-        return new MqttTopicManager<>(this, topicName, format);
+    default <T> Topic<T> topic(String topicName, PayloadFormat<T> format) {
+        return new MqttTopic<>(this, topicName, format);
     }
 
+    default <T> Topic<T> topic(String topicName, PayloadFormat<T> format, boolean retainByDefault) {
+        return new MqttTopic<>(this, topicName, format, retainByDefault);
+    }
 }

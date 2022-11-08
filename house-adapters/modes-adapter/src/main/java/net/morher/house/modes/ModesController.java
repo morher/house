@@ -1,5 +1,7 @@
 package net.morher.house.modes;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -11,9 +13,9 @@ import net.morher.house.api.entity.DeviceInfo;
 import net.morher.house.api.entity.EntityId;
 import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.common.CommandableEntity;
-import net.morher.house.api.entity.common.EntityCommandListener;
 import net.morher.house.api.entity.common.EntityOptions;
 import net.morher.house.api.entity.switches.SwitchOptions;
+import net.morher.house.api.subscription.Subscription;
 import net.morher.house.modes.ModesAdapterConfiguration.ModeDeviceConfiguration;
 import net.morher.house.modes.ModesAdapterConfiguration.ModeEntityConfiguration;
 import net.morher.house.modes.ModesAdapterConfiguration.ModesConfiguration;
@@ -69,19 +71,18 @@ public class ModesController {
     }
 
     private static class ModesPassthroughEntity<P, O extends EntityOptions, E extends CommandableEntity<P, O, P>>
-            implements ModesEntity, EntityCommandListener<P> {
-        private final E entity;
+            implements ModesEntity, Closeable {
+        private final Subscription subscription;
 
         public ModesPassthroughEntity(E entity, DeviceInfo deviceInfo, O options) {
-            this.entity = entity;
-            entity.command().subscribe(this);
+            subscription = entity.command().subscribe(entity.state()::publish);
             entity.setDeviceInfo(deviceInfo);
             entity.setOptions(options);
         }
 
         @Override
-        public void onCommand(P command) {
-            entity.publishState(command);
+        public void close() throws IOException {
+            subscription.unsubscribe();
         }
     }
 
