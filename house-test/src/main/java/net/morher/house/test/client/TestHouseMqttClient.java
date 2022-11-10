@@ -1,10 +1,12 @@
 package net.morher.house.test.client;
 
+import lombok.Getter;
 import net.morher.house.api.mqtt.MqttNamespace;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
 import net.morher.house.api.mqtt.client.MqttMessageListener;
 import net.morher.house.api.subscription.Subscription;
 
+@Getter
 public class TestHouseMqttClient implements HouseMqttClient {
     private final MqttNamespace namespace = MqttNamespace.defaultNamespace();
     private final MqttStub mqttStub;
@@ -13,13 +15,8 @@ public class TestHouseMqttClient implements HouseMqttClient {
         this.mqttStub = mqttStub;
     }
 
-    public static HouseMqttClient loopback() {
+    public static TestHouseMqttClient loopback() {
         return new TestHouseMqttClient(new DefaultMqttStub().loopback(true));
-    }
-
-    @Override
-    public MqttNamespace getNamespace() {
-        return namespace;
     }
 
     @Override

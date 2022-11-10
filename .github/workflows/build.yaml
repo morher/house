@@ -1,0 +1,18 @@
+name: 🧪 Build and test
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+
+jobs:
+  build:
+    name: 🏗️ Build and test
+    runs-on: self-hosted
+
+    steps:
+      - name: 🔽 Check out
+        uses: actions/checkout@v3
+
+      - name: 🧪 Build with Maven
+        run: mvn -B test

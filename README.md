@@ -6,24 +6,11 @@ House consists of common tools to create adapters between hardware and MQTT thro
 ## Entities
 The entity types are set up to line up with the entity types in Home Assistant. 
 
-| Type   | Use                                  | Home Assistant documentation                                             |
-|--------|--------------------------------------|--------------------------------------------------------------------------|
-| Lights | Lamps, LED-strips...                 | [MQTT Lights](https://www.home-assistant.io/integrations/light.mqtt/)    |
-| Sensor | Temperature sensors...               | [MQTT Sensor](https://www.home-assistant.io/integrations/sensor.mqtt/)   |
-| Switch | Devices that can be turned on or off | [MQTT Switches](https://www.home-assistant.io/integrations/switch.mqtt/) |
-
-
-## Adapters
-Adapters implement the functionality behind devices and entities, reacting to commands and reporting sensor data.
-
-| Adapter                                                      | Description                                                                                         |
-|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| [Buttons](./house-adapters/buttons-adapter/)                 | Handles button input like light switches etc.                                                       |
-| [Epson-projector](./house-adapters/epson-projector-adapter/) | Control Epson projectors throught the ESC/VP.net protocol.                                          |
-| [Miele](./house-adapters/miele-adapter/)                     | Monitors Miele house appliances.                                                                    |
-| [Modes](./house-adapters/modes-adapter/)                     | Creates virtual devices to set states such as guest mode, vacation mode, etc.                       |
-| [Shelly](./house-adapters/shelly-adapter/)                   | Control [Shelly](https://shelly.cloud/) devices via MQTT.                                           |
-| [Tasmota](./house-adapters/tasmota-adapter/)                 | Control devices flashed with [Tasmota](https://tasmota.github.io/).                                 |
-| [Wiz](./house-adapters/wizlight-adapter/)                    | Control light bulbs from [WiZ](https://www.wizconnected.com/en-gb) through the local UDP interface. |
-| [Wled](./house-adapters/wled-adapter/)                       | Control [WLED](https://kno.wled.ge/) managed LED strips.                                            |
-
+| Type          | Use                                  | Home Assistant documentation                                                           |
+|---------------|--------------------------------------|----------------------------------------------------------------------------------------|
+| Binary sensor | Motion sensors, door sensors...      | [MQTT Binary Snesor](https://www.home-assistant.io/integrations/binary_sensor.mqtt/)   |
+| Cover         | Window blinds, awning...             | [MQTT Cover](https://www.home-assistant.io/integrations/cover.mqtt/)                   |
+| Lights        | Lamps, LED-strips...                 | [MQTT Lights](https://www.home-assistant.io/integrations/light.mqtt/)                  |
+| Sensor        | Temperature sensors...               | [MQTT Sensor](https://www.home-assistant.io/integrations/sensor.mqtt/)                 |
+| Switch        | Devices that can be turned on or off | [MQTT Switches](https://www.home-assistant.io/integrations/switch.mqtt/)               |
+| Trigger       | Remote controls, buttons...          | [MQTT Device Trigger](https://www.home-assistant.io/integrations/device_trigger.mqtt/) |

@@ -9,33 +9,23 @@
 		<version>${revision}</version>
 	</parent>
 
-	<name>House Adapters</name>
-	<artifactId>house-adapters</artifactId>
+	<name>House Adapters Parent</name>
+	<artifactId>house-adapters-parent</artifactId>
 	<packaging>pom</packaging>
 
 	<description>Parent for adapter implementations</description>
 
-	<modules>
-		<module>buttons-adapter</module>
-		<module>epson-projector-adapter</module>
-		<module>miele-adapter</module>
-		<module>modes-adapter</module>
-		<module>shelly-adapter</module>
-		<module>tasmota-adapter</module>
-		<module>wizlight-adapter</module>
-		<module>wled-adapter</module>
-	</modules>
-
 	<properties>
 		<docker.path>docker.honu.city/house</docker.path>
 		<docker.name>${project.artifactId}</docker.name>
+		<adapter.version>${project.version}</adapter.version>
 	</properties>
 
 	<dependencies>
 		<!-- House dependencies -->
 		<dependency>
 			<groupId>net.morher.house</groupId>
-			<artifactId>house-api</artifactId>
+			<artifactId>house-core</artifactId>
 		</dependency>
 
 		<dependency>
@@ -59,52 +49,79 @@
 					<groupId>com.google.cloud.tools</groupId>
 					<artifactId>jib-maven-plugin</artifactId>
 					<version>${jib-plugin.version}</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>build</goal>
-							</goals>
-						</execution>
-					</executions>
 					<configuration>
 						<to>
-							<image>${docker.path}/${docker.name}</image>
+							<image>${docker.path}/${docker.name}:${adapter.version}</image>
+							<tags>
+								<tag>${project.version}</tag>
+							</tags>
 						</to>
 						<container>
+							<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+							<jvmFlags>
+  								<jvmFlag>-Dadapter.version=${adapter.version}</jvmFlag>
+							</jvmFlags>
+							<labels>
+								<adapterVersion>${adapter.version}</adapterVersion>
+							</labels>
+							<mainClass>${mainClass}</mainClass>
+							<volumes>
+							    <volume>/config</volume>
+							</volumes>
 							<workingDirectory>/config</workingDirectory>
 						</container>
 					</configuration>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.3.0</version>
+	
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+								<mainClass>${mainClass}</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.3.0</version>
-
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>${mainClass}</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>docker-tag-latest</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>com.google.cloud.tools</groupId>
+							<artifactId>jib-maven-plugin</artifactId>
+							<configuration>
+								<to>
+									<tags>
+										<tag>latest</tag>
+									</tags>
+								</to>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 </project>

@@ -2,6 +2,7 @@ package net.morher.house.api.mqtt.client;
 
 import net.morher.house.api.mqtt.client.MqttMessageListener.ParsedMqttMessageListener;
 import net.morher.house.api.mqtt.payload.PayloadFormat;
+import net.morher.house.api.state.StateObserver;
 import net.morher.house.api.subscription.Subscribable;
 import net.morher.house.api.subscription.Subscription;
 

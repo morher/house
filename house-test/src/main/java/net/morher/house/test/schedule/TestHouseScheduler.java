@@ -23,31 +23,114 @@ import lombok.Setter;
 import lombok.Synchronized;
 import net.morher.house.api.schedule.HouseScheduler;
 
+/**
+ * <p>
+ * An implementation of {@link HouseScheduler} that helps testing scheduled components. The implementation simulates time and
+ * schedules tasks to be run in this time space.
+ * 
+ * <p>
+ * The TestHouseScheduler lets the test code control the simulation of time progression through {@link #skipTo(Instant)},
+ * {@link #skipAhead(Duration)}, {@link TestHouseScheduler#skipAhead(long, TemporalUnit)}, {@link #skipAhead(long, TimeUnit)}
+ * and {@link #skipAheadToLastRegisteredTaskAndRunAllWaiting()}. Whenever time is skipped forward all tasks that are scheduled
+ * to run in this time frame are run. If any task schedules new tasks to be run within this time frame, they are run as well.
+ * All tasks are run in the chronological order. Tasks that are scheduled to be run at the new current time are not run by the
+ * skip-methods, except {@link #skipAheadToLastRegisteredTaskAndRunAllWaiting()}. To run tasks scheduled for "now", call
+ * {@link #runWaitingTasks()}.
+ * 
+ * <p>
+ * The current time can be retrieved by calling {@link #now()}. Notice that the code being tested should also call
+ * {@link HouseScheduler#now()} to get the current time, and not {@link Instant#now()}. Failing to do so will give unexpected
+ * results as two different time spaces will be used.
+ * 
+ * <p>
+ * {@link HouseScheduler#get()} should return this implementation when it is found on the classpath.
+ * {@link TestHouseScheduler#get()} is provided as a convenience method for verifying and casting.
+ * 
+ * @author Morten Hermansen
+ */
 public class TestHouseScheduler implements HouseScheduler {
     private static final AtomicLong sequencer = new AtomicLong();
     private Instant now;
     private Task<?> nextTask;
 
+    /**
+     * Get the global instance of {@link HouseScheduler} and verify the implementation is TestHouseScheduler.
+     * 
+     * @return Returns the global scheduler instance as TestHouseScheduler.
+     */
+    public static TestHouseScheduler get() {
+        HouseScheduler scheduler = HouseScheduler.get();
+        if (scheduler instanceof TestHouseScheduler) {
+            return (TestHouseScheduler) scheduler;
+        }
+        throw new IllegalArgumentException("TestHouseScheduler is not the current implementation");
+    }
+
+    /**
+     * Create a TestHouseScheduler starting at the current time.
+     */
     public TestHouseScheduler() {
         this(Instant.now());
     }
 
+    /**
+     * Create a TestHouseScheduler starting at a given time.
+     * 
+     * @param now
+     *            The initial time for the scheduler.
+     */
     public TestHouseScheduler(Instant now) {
         this.now = now;
     }
 
+    /**
+     * Skip ahead a given amount of time and run scheduled tasks due before the new now. It is only possible to skip forwards in
+     * time.
+     * 
+     * @param amount
+     *            The amount of time
+     * @param unit
+     *            The unit for the amount of time
+     * @return Itself
+     */
     public TestHouseScheduler skipAhead(long amount, TimeUnit unit) {
         return skipAhead(Duration.ofNanos(unit.toNanos(amount)));
     }
 
+    /**
+     * Skip ahead a given amount of time and run scheduled tasks due before the new now. It is only possible to skip forwards in
+     * time.
+     * 
+     * @param amount
+     *            The amount of time
+     * @param unit
+     *            The unit for the amount of time
+     * @return Itself
+     */
     public TestHouseScheduler skipAhead(long amount, TemporalUnit unit) {
         return skipAhead(Duration.of(amount, unit));
     }
 
+    /**
+     * Skip ahead a given amount of time and run scheduled tasks due before the new now. It is only possible to skip forwards in
+     * time.
+     * 
+     * @param duration
+     *            The amount of time to skip
+     * @return Itself
+     */
     public TestHouseScheduler skipAhead(Duration duration) {
         return skipTo(now.plus(duration));
     }
 
+    /**
+     * Skip ahead to a given moment in time and run scheduled tasks due before the new now. It is only possible to skip forwards
+     * in time.
+     * 
+     * @param skipTo
+     *            The moment to skip to
+     * @return Itself
+     */
     public TestHouseScheduler skipTo(Instant skipTo) {
         if (skipTo.isBefore(now)) {
             throw new IllegalArgumentException("Can only go forwards in time...");
@@ -63,12 +146,29 @@ public class TestHouseScheduler implements HouseScheduler {
         return this;
     }
 
+    /**
+     * Run all tasks that are due by "now".
+     */
     public void runWaitingTasks() {
         while (isNextTaskReady()) {
             Task<?> task = shiftNextTask();
             task.runAndConsiderRescheduling()
                     .ifPresent(this::schedule);
         }
+    }
+
+    /**
+     * Skip ahead to the time the last scheduled task is due to run and run all tasks in between and at this time. Keep in mind
+     * that this includes new tasks scheduled by tasks being run. New tasks that are scheduled to be run after the time skipped
+     * ahead to will not be run. Notice that the skip-ahead is calculated before running the tasks, and new scheduling will not
+     * affect the skip-ahead.
+     */
+    public void skipAheadToLastRegisteredTaskAndRunAllWaiting() {
+        Task<?> task = getLastTask();
+        if (task != null && task.getRunAt().isAfter(now)) {
+            skipTo(task.getRunAt());
+        }
+        runWaitingTasks();
     }
 
     @Override
@@ -171,6 +271,17 @@ public class TestHouseScheduler implements HouseScheduler {
             }
             task.setNextTask(precedingTask.getNextTask());
             precedingTask.setNextTask(task);
+        }
+        return task;
+    }
+
+    @Synchronized
+    private Task<?> getLastTask() {
+        Task<?> task = null;
+        Task<?> nextTask = this.nextTask;
+        while (nextTask != null) {
+            task = nextTask;
+            nextTask = task.getNextTask();
         }
         return task;
     }
