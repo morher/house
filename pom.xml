@@ -42,7 +42,7 @@
 		<logback.version>1.2.11</logback.version>
 		<paho-mqtt.version>1.2.5</paho-mqtt.version>
 		<jackson.version>2.13.2</jackson.version>
-		<jackson-databind.version>2.13.2.2</jackson-databind.version>
+		<jackson-databind.version>2.13.4.1</jackson-databind.version>
 
 		<lombok.version>1.18.22</lombok.version>
 
