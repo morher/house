@@ -33,6 +33,7 @@ jobs:
       - name: 🚀 Build and release
         run: |
           mvn \
+            -X \
             --no-transfer-progress \
             --batch-mode \
             -Psign-artifacts\
