@@ -6,11 +6,12 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DelayedTrigger {
+    private final Object scheduleLock = new Object();
+    private final Object runLock = new Object();
     private final Runnable scheduleCallback = this::considerRun;
     private final HouseScheduler scheduler;
     private final ScheduledRunnable task;
@@ -21,19 +22,19 @@ public class DelayedTrigger {
         this.task = task;
     }
 
-    @Synchronized
     public void cancel() {
         nextExecution = null;
     }
 
-    @Synchronized
     public void runAt(Instant time) {
-        if (time == null) {
-            time = scheduler.now();
+        synchronized (scheduleLock) {
+            if (time == null) {
+                time = scheduler.now();
+            }
+            log.trace("Update next execution of task '{}' from {} to {}", task, nextExecution, time);
+            nextExecution = time;
+            scheduler.execute(scheduleCallback);
         }
-        log.trace("Update next execution of task '{}' from {} to {}", task, nextExecution, time);
-        nextExecution = time;
-        scheduler.execute(scheduleCallback);
     }
 
     public void runAfter(Duration duration) {
@@ -48,26 +49,27 @@ public class DelayedTrigger {
         runAt(scheduler.now());
     }
 
-    @Synchronized
     private void considerRun() {
-        if (nextExecution == null) {
-            log.trace("No planned execution of task '{}'", task);
-            return;
-        }
-        Instant now = scheduler.now();
-        if (now.isBefore(nextExecution)) {
-            long waitMs = ChronoUnit.MILLIS.between(now, nextExecution);
-            log.trace("Next execution time for task '{}' not reached. Schedule new attempt in {} ms", task, waitMs);
-            scheduler.schedule(scheduleCallback, waitMs, TimeUnit.MILLISECONDS);
-            return;
-        }
-        log.debug("Executing task '{}'", task);
-        nextExecution = null;
-        try {
-            task.runScheduled();
+        synchronized (runLock) {
+            if (nextExecution == null) {
+                log.trace("No planned execution of task '{}'", task);
+                return;
+            }
+            Instant now = scheduler.now();
+            if (now.isBefore(nextExecution)) {
+                long waitMs = ChronoUnit.MILLIS.between(now, nextExecution);
+                log.trace("Next execution time for task '{}' not reached. Schedule new attempt in {} ms", task, waitMs);
+                scheduler.schedule(scheduleCallback, waitMs, TimeUnit.MILLISECONDS);
+                return;
+            }
+            log.debug("Executing task '{}'", task);
+            nextExecution = null;
+            try {
+                task.runScheduled();
 
-        } catch (Reschedule r) {
-            runAt(r.getRescheduleAt());
+            } catch (Reschedule r) {
+                runAt(r.getRescheduleAt());
+            }
         }
     }
 }

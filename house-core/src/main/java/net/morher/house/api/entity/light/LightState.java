@@ -8,11 +8,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.With;
+import net.morher.house.api.utils.color.Brightness;
 
 @With
 @Data
 @JsonInclude(Include.NON_NULL)
 public class LightState {
+    private static final int BRIGHTNESS_MIN = 0;
+    private static final int BRIGHTNESS_MAX = 255;
     private final PowerState state;
     /**
      * Brightness given as a value between 0 and 255
@@ -33,6 +36,12 @@ public class LightState {
 
     public LightState() {
         this(null, null, null);
+    }
+
+    public Brightness brightnessNormalized() {
+        return brightness != null
+                ? new Brightness(brightness, BRIGHTNESS_MIN, BRIGHTNESS_MAX)
+                : null;
     }
 
     public static LightState defaultState() {
