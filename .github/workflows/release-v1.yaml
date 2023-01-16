@@ -32,10 +32,13 @@ jobs:
 
       - name: 🚀 Build and release
         run: |
+          MAVEN_LOG_OPTS="--no-transfer-progress"
+          if [ -n "${{runner.debug}}" ]; then
+            MAVEN_LOG_OPTS="-X"
+          fi
           mvn \
-            -X \
-            --no-transfer-progress \
             --batch-mode \
+            $MAVEN_LOG_OPTS \
             -Psign-artifacts\
             -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
             -Drevision=${VERSION} \
