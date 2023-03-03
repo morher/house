@@ -2,6 +2,8 @@ package net.morher.house.api.hass;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.morher.house.api.entity.sensor.SensorEntity;
@@ -10,10 +12,15 @@ import net.morher.house.api.mqtt.client.HouseMqttClient;
 
 @SuppressWarnings("rawtypes")
 public class SensorEntityAnnouncer extends BaseEntityAnnouncer<SensorEntity<?>> {
+  private final Map<String, String> unitMapping = new HashMap<>();
 
   @SuppressWarnings("unchecked")
   public SensorEntityAnnouncer(HouseMqttClient mqtt) {
     super(mqtt, (Class<SensorEntity<?>>) (Class) SensorEntity.class);
+    unitMapping.put("seconds", "s");
+    unitMapping.put("minutes", "min");
+    unitMapping.put("hours", "h");
+    unitMapping.put("days", "d");
   }
 
   @Override
@@ -25,7 +32,7 @@ public class SensorEntityAnnouncer extends BaseEntityAnnouncer<SensorEntity<?>> 
     SensorOptions options = entity.getOptions();
     if (options != null) {
       entityConfig.setDeviceClass(options.getDeviceClass());
-      entityConfig.setUnit(options.getUnit());
+      entityConfig.setUnit(unit(options.getUnit()));
       if (options.getCategory() != null) {
         entityConfig.setEntityCategory(options.getCategory().name().toLowerCase());
       }
@@ -34,6 +41,10 @@ public class SensorEntityAnnouncer extends BaseEntityAnnouncer<SensorEntity<?>> 
     entityConfig.setStateTopic(entity.state().getTopic());
 
     announceEntity(entityConfig);
+  }
+
+  private String unit(String unit) {
+    return unitMapping.getOrDefault(unit, unit);
   }
 
   @Data

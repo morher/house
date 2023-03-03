@@ -5,7 +5,7 @@ public enum SensorType {
   HUMIDITY("humidity", "%"),
   ILLUMINANCE_LM("illuminance", "lm"),
   ILLUMINANCE_LX("illuminance", "lx"),
-  TEMPERATURE_C("temperature", "�C"),
+  TEMPERATURE_C("temperature", "°C"),
   DURATION_S("duration", "seconds"),
   DURATION_M("duration", "minutes"),
   DURATION_H("duration", "hours"),
