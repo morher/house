@@ -1,9 +1,9 @@
 package net.morher.house.api.subscription;
 
 public interface Subscription extends AutoCloseable {
-    void unsubscribe();
+  void unsubscribe();
 
-    default void close() {
-        unsubscribe();
-    }
+  default void close() {
+    unsubscribe();
+  }
 }

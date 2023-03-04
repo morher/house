@@ -8,8 +8,11 @@ import net.morher.house.api.mqtt.payload.PayloadFormat;
 
 public class BinarySensorEntity extends StatefullEntity<Boolean, BinarySensorOptions> {
 
-    public BinarySensorEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener, PayloadFormat<Boolean> stateSerializer) {
-        super(client, entityId, entityListener, stateSerializer);
-    }
-
+  public BinarySensorEntity(
+      HouseMqttClient client,
+      EntityId entityId,
+      EntityListener entityListener,
+      PayloadFormat<Boolean> stateSerializer) {
+    super(client, entityId, entityListener, stateSerializer);
+  }
 }

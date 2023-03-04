@@ -4,27 +4,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
 @Data
 @JsonInclude(Include.NON_NULL)
 public abstract class BaseEntityConfig {
 
-    private String name;
-    @JsonProperty("unique_id")
-    private String uniqueId;
+  private String name;
 
-    private String icon;
+  @JsonProperty("unique_id")
+  private String uniqueId;
 
-    @JsonProperty("avty_t")
-    private String availabilityTopic;
+  private String icon;
 
-    @JsonProperty("entity_category")
-    private String entityCategory;
+  @JsonProperty("avty_t")
+  private String availabilityTopic;
 
-    private DeviceConfig device;
+  @JsonProperty("entity_category")
+  private String entityCategory;
 
-    @JsonIgnore
-    public abstract String getEntityClass();
+  private DeviceConfig device;
+
+  @JsonIgnore
+  public abstract String getEntityClass();
 }

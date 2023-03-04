@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class MqttOptions {
-    private String serverUrl;
-    private String username;
-    private String password;
-    private String clientId;
-    private int reconnectInterval = 10; // Seconds
+  private String serverUrl;
+  private String username;
+  private String password;
+  private String clientId;
+  private int reconnectInterval = 10; // Seconds
 }

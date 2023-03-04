@@ -8,8 +8,7 @@ import net.morher.house.api.mqtt.payload.BooleanMessage;
 
 public class SwitchEntity extends CommandableEntity<Boolean, SwitchOptions, Boolean> {
 
-    public SwitchEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener) {
-        super(client, entityId, entityListener, BooleanMessage.onOff(), BooleanMessage.onOff());
-    }
-
+  public SwitchEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener) {
+    super(client, entityId, entityListener, BooleanMessage.onOff(), BooleanMessage.onOff());
+  }
 }

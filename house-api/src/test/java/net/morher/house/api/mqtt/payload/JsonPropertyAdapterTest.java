@@ -15,29 +15,31 @@ import org.mockito.Mockito;
 
 public class JsonPropertyAdapterTest {
 
-    @Test
-    public void serializationIsUnsupported() {
-        @SuppressWarnings("unchecked")
-        PayloadFormat<String> format = Mockito.mock(PayloadFormat.class);
+  @Test
+  public void serializationIsUnsupported() {
+    @SuppressWarnings("unchecked")
+    PayloadFormat<String> format = Mockito.mock(PayloadFormat.class);
 
-        JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(format, "Switch1");
+    JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(format, "Switch1");
 
-        try {
-            adapter.serialize("Test");
-            fail("Should throw UnsupportedOperationException");
+    try {
+      adapter.serialize("Test");
+      fail("Should throw UnsupportedOperationException");
 
-        } catch (UnsupportedOperationException e) {
-            assertThat(e.getMessage(), is(equalTo("Cannot serialize into a JSON property")));
-        }
-
-        verify(format, never()).serialize(anyString());
+    } catch (UnsupportedOperationException e) {
+      assertThat(e.getMessage(), is(equalTo("Cannot serialize into a JSON property")));
     }
 
-    @Test
-    public void testPropertyFound() {
-        JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(toStr(), "Switch1.Action");
+    verify(format, never()).serialize(anyString());
+  }
 
-        String value = adapter.deserialize("""
+  @Test
+  public void testPropertyFound() {
+    JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(toStr(), "Switch1.Action");
+
+    String value =
+        adapter.deserialize(
+            """
                 {
                   "Switch1": {
                     "Action": "ON"
@@ -46,25 +48,28 @@ public class JsonPropertyAdapterTest {
                     "Action": "OFF"
                   }
                 }
-                """.getBytes());
+                """
+                .getBytes());
 
-        assertThat(value, is(equalTo("ON")));
-    }
+    assertThat(value, is(equalTo("ON")));
+  }
 
-    @Test
-    public void testMessageIsNotJsonObject() {
-        JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(toStr(), "Switch2.Action");
+  @Test
+  public void testMessageIsNotJsonObject() {
+    JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(toStr(), "Switch2.Action");
 
-        String value = adapter.deserialize("true".getBytes());
+    String value = adapter.deserialize("true".getBytes());
 
-        assertThat(value, is(nullValue()));
-    }
+    assertThat(value, is(nullValue()));
+  }
 
-    @Test
-    public void testPropertyNotFound() {
-        JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(toStr(), "Switch3.Action");
+  @Test
+  public void testPropertyNotFound() {
+    JsonPropertyAdapter<String> adapter = new JsonPropertyAdapter<>(toStr(), "Switch3.Action");
 
-        String value = adapter.deserialize("""
+    String value =
+        adapter.deserialize(
+            """
                 {
                   "Switch1": {
                     "Action": "ON"
@@ -73,9 +78,9 @@ public class JsonPropertyAdapterTest {
                     "Action": "OFF"
                   }
                 }
-                """.getBytes());
+                """
+                .getBytes());
 
-        assertThat(value, is(nullValue()));
-    }
-
+    assertThat(value, is(nullValue()));
+  }
 }

@@ -8,13 +8,13 @@ import net.morher.house.api.entity.common.EntityOptions;
 @EqualsAndHashCode(callSuper = true)
 public class CoverOptions extends EntityOptions {
 
-    /**
-     * Normally open means up and closed means down. With {@code invertDirection} set to {@code true} open means down and closed
-     * means up.
-     */
-    private boolean invertDirection;
+  /**
+   * Normally open means up and closed means down. With {@code invertDirection} set to {@code true}
+   * open means down and closed means up.
+   */
+  private boolean invertDirection;
 
-    private boolean position;
+  private boolean position;
 
-    private boolean tilt;
+  private boolean tilt;
 }

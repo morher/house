@@ -8,10 +8,10 @@ import org.junit.Test;
 
 public class RawMessageTest {
 
-    @Test
-    public void testStringMessage() {
-        PayloadFormat<String> format = RawMessage.toStr();
-        assertThat(format.serialize("Some value"), is(equalTo("Some value".getBytes())));
-        assertThat(format.deserialize("Another value".getBytes()), is(equalTo("Another value")));
-    }
+  @Test
+  public void testStringMessage() {
+    PayloadFormat<String> format = RawMessage.toStr();
+    assertThat(format.serialize("Some value"), is(equalTo("Some value".getBytes())));
+    assertThat(format.deserialize("Another value".getBytes()), is(equalTo("Another value")));
+  }
 }

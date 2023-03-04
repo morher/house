@@ -12,84 +12,81 @@ import org.junit.Test;
 
 public class SubscriptionRegistryTest {
 
-    @Test
-    public void testDispatcher() {
-        SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
+  @Test
+  public void testDispatcher() {
+    SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
 
-        TestListener subscriber1 = mock(TestListener.class);
-        registry.subscribe(subscriber1);
-        TestListener subscriber2 = mock(TestListener.class);
-        registry.subscribe(subscriber2);
+    TestListener subscriber1 = mock(TestListener.class);
+    registry.subscribe(subscriber1);
+    TestListener subscriber2 = mock(TestListener.class);
+    registry.subscribe(subscriber2);
 
-        registry.getDispatcher().aMethod();
+    registry.getDispatcher().aMethod();
 
-        verify(subscriber1, times(1)).aMethod();
-        verify(subscriber2, times(1)).aMethod();
-    }
+    verify(subscriber1, times(1)).aMethod();
+    verify(subscriber2, times(1)).aMethod();
+  }
 
-    @Test
-    public void testDispatcherDefaultImplementation() {
-        SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
+  @Test
+  public void testDispatcherDefaultImplementation() {
+    SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
 
-        TestListener subscriber1 = mock(TestListener.class);
-        registry.subscribe(subscriber1);
-        TestListener subscriber2 = mock(TestListener.class);
-        registry.subscribe(subscriber2);
+    TestListener subscriber1 = mock(TestListener.class);
+    registry.subscribe(subscriber1);
+    TestListener subscriber2 = mock(TestListener.class);
+    registry.subscribe(subscriber2);
 
-        registry.getDispatcher().methodWithDefaultImplementation();
+    registry.getDispatcher().methodWithDefaultImplementation();
 
-        verify(subscriber1, times(1)).methodWithDefaultImplementation();
-        verify(subscriber2, times(1)).methodWithDefaultImplementation();
-    }
+    verify(subscriber1, times(1)).methodWithDefaultImplementation();
+    verify(subscriber2, times(1)).methodWithDefaultImplementation();
+  }
 
-    @Test
-    public void testDispatcherWithReturnValue() {
-        SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
+  @Test
+  public void testDispatcherWithReturnValue() {
+    SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
 
-        TestListener subscriber1 = mock(TestListener.class);
-        registry.subscribe(subscriber1);
-        TestListener subscriber2 = mock(TestListener.class);
-        registry.subscribe(subscriber2);
+    TestListener subscriber1 = mock(TestListener.class);
+    registry.subscribe(subscriber1);
+    TestListener subscriber2 = mock(TestListener.class);
+    registry.subscribe(subscriber2);
 
-        registry.getDispatcher().methodWithReturnValue();
+    registry.getDispatcher().methodWithReturnValue();
 
-        verify(subscriber1, times(1)).methodWithReturnValue();
-        verify(subscriber2, times(1)).methodWithReturnValue();
-    }
+    verify(subscriber1, times(1)).methodWithReturnValue();
+    verify(subscriber2, times(1)).methodWithReturnValue();
+  }
 
-    @Test
-    public void testDispatcherWithParameter() {
-        SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
+  @Test
+  public void testDispatcherWithParameter() {
+    SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
 
-        TestListener subscriber1 = mock(TestListener.class);
-        registry.subscribe(subscriber1);
-        TestListener subscriber2 = mock(TestListener.class);
-        registry.subscribe(subscriber2);
+    TestListener subscriber1 = mock(TestListener.class);
+    registry.subscribe(subscriber1);
+    TestListener subscriber2 = mock(TestListener.class);
+    registry.subscribe(subscriber2);
 
-        registry.getDispatcher().methodWithParameter("Test");
+    registry.getDispatcher().methodWithParameter("Test");
 
-        verify(subscriber1, times(1)).methodWithParameter(eq("Test"));
-        verify(subscriber2, times(1)).methodWithParameter(eq("Test"));
-    }
+    verify(subscriber1, times(1)).methodWithParameter(eq("Test"));
+    verify(subscriber2, times(1)).methodWithParameter(eq("Test"));
+  }
 
-    @Test
-    public void testToString() {
-        SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
+  @Test
+  public void testToString() {
+    SubscriptionRegistry<TestListener> registry = new SubscriptionRegistry<>(TestListener.class);
 
-        assertThat(
-                registry.getDispatcher().toString(),
-                is(equalTo("SubscriptionRegistry for TestListener")));
-    }
+    assertThat(
+        registry.getDispatcher().toString(), is(equalTo("SubscriptionRegistry for TestListener")));
+  }
 
-    private interface TestListener {
-        void aMethod();
+  private interface TestListener {
+    void aMethod();
 
-        default void methodWithDefaultImplementation() {
+    default void methodWithDefaultImplementation() {}
 
-        }
+    String methodWithReturnValue();
 
-        String methodWithReturnValue();
-
-        void methodWithParameter(String parameter);
-    }
+    void methodWithParameter(String parameter);
+  }
 }

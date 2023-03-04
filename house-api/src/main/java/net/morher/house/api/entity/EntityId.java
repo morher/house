@@ -10,6 +10,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class EntityId {
-    private final DeviceId device;
-    private final String entity;
+  private final DeviceId device;
+  private final String entity;
 }

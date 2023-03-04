@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class MqttConfiguration {
-    private String serverUrl;
-    private String username;
-    private String password;
-    private String clientIdPrefix;
+  private String serverUrl;
+  private String username;
+  private String password;
+  private String clientIdPrefix;
 }

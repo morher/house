@@ -12,87 +12,88 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.function.Consumer;
-
+import net.morher.house.api.subscription.Subscribable;
+import net.morher.house.api.subscription.Subscription;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import net.morher.house.api.subscription.Subscribable;
-import net.morher.house.api.subscription.Subscription;
-
 @SuppressWarnings("resource")
 public class TestSubscriberTest {
 
-    private final Subscription sub = Mockito.mock(Subscription.class);
-    @SuppressWarnings("unchecked")
-    private final ArgumentCaptor<Consumer<String>> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-    @SuppressWarnings("unchecked")
-    private final Subscribable<String> subscribable = mock(Subscribable.class);
+  private final Subscription sub = Mockito.mock(Subscription.class);
 
-    @Test
-    public void testSubscribe() {
-        new TestSubscriber<>(subscribable);
+  @SuppressWarnings("unchecked")
+  private final ArgumentCaptor<Consumer<String>> consumerCaptor =
+      ArgumentCaptor.forClass(Consumer.class);
 
-        verify(subscribable).subscribe(any());
-    }
+  @SuppressWarnings("unchecked")
+  private final Subscribable<String> subscribable = mock(Subscribable.class);
 
-    @Test
-    public void testClose() {
-        doReturn(sub).when(subscribable).subscribe(any());
+  @Test
+  public void testSubscribe() {
+    new TestSubscriber<>(subscribable);
 
-        TestSubscriber<String> subscriber = new TestSubscriber<>(subscribable);
-        verifyNoInteractions(sub);
+    verify(subscribable).subscribe(any());
+  }
 
-        subscriber.close();
-        verify(sub).unsubscribe();
-    }
+  @Test
+  public void testClose() {
+    doReturn(sub).when(subscribable).subscribe(any());
 
-    @Test
-    public void testReceiveItem() {
-        doReturn(sub).when(subscribable).subscribe(consumerCaptor.capture());
+    TestSubscriber<String> subscriber = new TestSubscriber<>(subscribable);
+    verifyNoInteractions(sub);
 
-        TestSubscriber<String> subscriber = new TestSubscriber<>(subscribable);
+    subscriber.close();
+    verify(sub).unsubscribe();
+  }
 
-        assertThat(subscriber.items(), is(not(nullValue())));
-        assertThat(subscriber.items().size(), is(0));
-        assertThat(subscriber.size(), is(0));
-        assertThat(subscriber.lastItem(), is(nullValue()));
+  @Test
+  public void testReceiveItem() {
+    doReturn(sub).when(subscribable).subscribe(consumerCaptor.capture());
 
-        Consumer<String> consumer = consumerCaptor.getValue();
-        consumer.accept("test value 1");
+    TestSubscriber<String> subscriber = new TestSubscriber<>(subscribable);
 
-        assertThat(subscriber.items(), is(not(nullValue())));
-        assertThat(subscriber.items().size(), is(1));
-        assertThat(subscriber.size(), is(1));
-        assertThat(subscriber.items(), hasItems("test value 1"));
-        assertThat(subscriber.lastItem(), is("test value 1"));
+    assertThat(subscriber.items(), is(not(nullValue())));
+    assertThat(subscriber.items().size(), is(0));
+    assertThat(subscriber.size(), is(0));
+    assertThat(subscriber.lastItem(), is(nullValue()));
 
-        consumer.accept("test value 2");
+    Consumer<String> consumer = consumerCaptor.getValue();
+    consumer.accept("test value 1");
 
-        assertThat(subscriber.items(), is(not(nullValue())));
-        assertThat(subscriber.items().size(), is(2));
-        assertThat(subscriber.size(), is(2));
-        assertThat(subscriber.items(), hasItems("test value 1", "test value 2"));
-        assertThat(subscriber.lastItem(), is("test value 2"));
-    }
+    assertThat(subscriber.items(), is(not(nullValue())));
+    assertThat(subscriber.items().size(), is(1));
+    assertThat(subscriber.size(), is(1));
+    assertThat(subscriber.items(), hasItems("test value 1"));
+    assertThat(subscriber.lastItem(), is("test value 1"));
 
-    @Test
-    public void testClear() {
-        doReturn(sub).when(subscribable).subscribe(consumerCaptor.capture());
+    consumer.accept("test value 2");
 
-        TestSubscriber<String> subscriber = new TestSubscriber<>(subscribable);
+    assertThat(subscriber.items(), is(not(nullValue())));
+    assertThat(subscriber.items().size(), is(2));
+    assertThat(subscriber.size(), is(2));
+    assertThat(subscriber.items(), hasItems("test value 1", "test value 2"));
+    assertThat(subscriber.lastItem(), is("test value 2"));
+  }
 
-        Consumer<String> consumer = consumerCaptor.getValue();
-        consumer.accept("test value 1");
-        consumer.accept("test value 2");
-        subscriber.reset();
+  @Test
+  public void testClear() {
+    doReturn(sub).when(subscribable).subscribe(consumerCaptor.capture());
 
-        consumer.accept("test value 3");
+    TestSubscriber<String> subscriber = new TestSubscriber<>(subscribable);
 
-        assertThat(subscriber.items(), is(not(nullValue())));
-        assertThat(subscriber.items().size(), is(1));
-        assertThat(subscriber.size(), is(1));
-        assertThat(subscriber.items(), hasItems("test value 3"));
-        assertThat(subscriber.lastItem(), is("test value 3"));
-    }
+    Consumer<String> consumer = consumerCaptor.getValue();
+    consumer.accept("test value 1");
+    consumer.accept("test value 2");
+    subscriber.reset();
+
+    consumer.accept("test value 3");
+
+    assertThat(subscriber.items(), is(not(nullValue())));
+    assertThat(subscriber.items().size(), is(1));
+    assertThat(subscriber.size(), is(1));
+    assertThat(subscriber.items(), hasItems("test value 3"));
+    assertThat(subscriber.lastItem(), is("test value 3"));
+  }
 }

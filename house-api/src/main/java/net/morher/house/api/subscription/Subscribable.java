@@ -4,6 +4,5 @@ import java.util.function.Consumer;
 
 public interface Subscribable<T> {
 
-    Subscription subscribe(Consumer<? super T> listener);
-
+  Subscription subscribe(Consumer<? super T> listener);
 }

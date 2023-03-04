@@ -8,24 +8,23 @@ import net.morher.house.api.subscription.Subscription;
 
 public interface Topic<T> extends Subscribable<T> {
 
-    String getTopic();
+  String getTopic();
 
-    <S> Topic<S> subTopic(String postFix, PayloadFormat<S> serializer);
+  <S> Topic<S> subTopic(String postFix, PayloadFormat<S> serializer);
 
-    <S> Topic<S> subTopic(String postFix, PayloadFormat<S> serializer, boolean retainByDefault);
+  <S> Topic<S> subTopic(String postFix, PayloadFormat<S> serializer, boolean retainByDefault);
 
-    Subscription subscribe(ParsedMqttMessageListener<? super T> listener);
+  Subscription subscribe(ParsedMqttMessageListener<? super T> listener);
 
-    void publish(T message);
+  void publish(T message);
 
-    void publish(T message, boolean retain);
+  void publish(T message, boolean retain);
 
-    default StateObserver<T> observer() {
-        return new StateObserver<>(this);
-    }
+  default StateObserver<T> observer() {
+    return new StateObserver<>(this);
+  }
 
-    default StateObserver<T> observer(T fallbackValue) {
-        return new StateObserver<>(this, fallbackValue);
-    }
-
+  default StateObserver<T> observer(T fallbackValue) {
+    return new StateObserver<>(this, fallbackValue);
+  }
 }

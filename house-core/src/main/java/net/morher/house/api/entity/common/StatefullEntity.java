@@ -7,16 +7,21 @@ import net.morher.house.api.mqtt.client.Topic;
 import net.morher.house.api.mqtt.payload.PayloadFormat;
 
 public class StatefullEntity<S, O extends EntityOptions> extends ConfigurableEntity<O> {
-    protected final Topic<S> stateTopic;
-    protected S currentState;
+  protected final Topic<S> stateTopic;
+  protected S currentState;
 
-    public StatefullEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener, PayloadFormat<S> stateSerializer) {
-        super(entityId, entityListener);
+  public StatefullEntity(
+      HouseMqttClient client,
+      EntityId entityId,
+      EntityListener entityListener,
+      PayloadFormat<S> stateSerializer) {
+    super(entityId, entityListener);
 
-        this.stateTopic = client.topic(client.getNamespace().entityStateTopic(entityId), stateSerializer, true);
-    }
+    this.stateTopic =
+        client.topic(client.getNamespace().entityStateTopic(entityId), stateSerializer, true);
+  }
 
-    public Topic<S> state() {
-        return stateTopic;
-    }
+  public Topic<S> state() {
+    return stateTopic;
+  }
 }

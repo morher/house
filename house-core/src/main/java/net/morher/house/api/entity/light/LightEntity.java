@@ -9,10 +9,10 @@ import net.morher.house.api.mqtt.payload.PayloadFormat;
 
 public class LightEntity extends CommandableEntity<LightState, LightOptions, LightState> {
 
-    private static final PayloadFormat<LightState> LIGHT_STATE_CONVERTER = JsonMessage.toType(LightState.class);
+  private static final PayloadFormat<LightState> LIGHT_STATE_CONVERTER =
+      JsonMessage.toType(LightState.class);
 
-    public LightEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener) {
-        super(client, entityId, entityListener, LIGHT_STATE_CONVERTER, LIGHT_STATE_CONVERTER);
-    }
-
+  public LightEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener) {
+    super(client, entityId, entityListener, LIGHT_STATE_CONVERTER, LIGHT_STATE_CONVERTER);
+  }
 }

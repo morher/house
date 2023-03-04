@@ -9,26 +9,24 @@ import net.morher.house.api.mqtt.payload.RawMessage;
 import net.morher.house.api.subscription.Subscription;
 
 public class TriggerEntity extends ConfigurableEntity<TriggerOptions> {
-    protected final Topic<String> triggerTopic;
+  protected final Topic<String> triggerTopic;
 
-    public TriggerEntity(HouseMqttClient client, EntityId id, EntityListener entityListener) {
-        super(id, entityListener);
+  public TriggerEntity(HouseMqttClient client, EntityId id, EntityListener entityListener) {
+    super(id, entityListener);
 
-        triggerTopic = client.topic(
-                client.getNamespace().entityTriggerTopic(id),
-                RawMessage.toStr(),
-                false);
-    }
+    triggerTopic =
+        client.topic(client.getNamespace().entityTriggerTopic(id), RawMessage.toStr(), false);
+  }
 
-    public Subscription subscribeOnTrigger(EntityTriggerListener listener) {
-        return triggerTopic.subscribe(event -> listener.onTrigger(event));
-    }
+  public Subscription subscribeOnTrigger(EntityTriggerListener listener) {
+    return triggerTopic.subscribe(event -> listener.onTrigger(event));
+  }
 
-    public String getTriggerTopic() {
-        return triggerTopic.getTopic();
-    }
+  public String getTriggerTopic() {
+    return triggerTopic.getTopic();
+  }
 
-    public void publishEvent(String event) {
-        triggerTopic.publish(event);
-    }
+  public void publishEvent(String event) {
+    triggerTopic.publish(event);
+  }
 }

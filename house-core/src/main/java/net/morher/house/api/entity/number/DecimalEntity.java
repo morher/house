@@ -8,8 +8,7 @@ import net.morher.house.api.mqtt.payload.NumberMessage;
 
 public class DecimalEntity extends CommandableEntity<Double, NumberOptions, Double> {
 
-    public DecimalEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener) {
-        super(client, entityId, entityListener, NumberMessage.decimal(), NumberMessage.decimal());
-    }
-
+  public DecimalEntity(HouseMqttClient client, EntityId entityId, EntityListener entityListener) {
+    super(client, entityId, entityListener, NumberMessage.decimal(), NumberMessage.decimal());
+  }
 }

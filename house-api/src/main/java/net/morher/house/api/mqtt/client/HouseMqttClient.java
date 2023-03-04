@@ -6,19 +6,19 @@ import net.morher.house.api.subscription.Subscription;
 
 public interface HouseMqttClient {
 
-    MqttNamespace getNamespace();
+  MqttNamespace getNamespace();
 
-    String getAvailabilityTopic();
+  String getAvailabilityTopic();
 
-    void publish(String topic, byte[] payload, boolean retain);
+  void publish(String topic, byte[] payload, boolean retain);
 
-    Subscription subscribe(String topic, MqttMessageListener listener);
+  Subscription subscribe(String topic, MqttMessageListener listener);
 
-    default <T> Topic<T> topic(String topicName, PayloadFormat<T> format) {
-        return new MqttTopic<>(this, topicName, format);
-    }
+  default <T> Topic<T> topic(String topicName, PayloadFormat<T> format) {
+    return new MqttTopic<>(this, topicName, format);
+  }
 
-    default <T> Topic<T> topic(String topicName, PayloadFormat<T> format, boolean retainByDefault) {
-        return new MqttTopic<>(this, topicName, format, retainByDefault);
-    }
+  default <T> Topic<T> topic(String topicName, PayloadFormat<T> format, boolean retainByDefault) {
+    return new MqttTopic<>(this, topicName, format, retainByDefault);
+  }
 }
