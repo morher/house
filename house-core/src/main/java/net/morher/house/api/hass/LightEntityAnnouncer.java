@@ -19,19 +19,19 @@ public class LightEntityAnnouncer extends BaseEntityAnnouncer<LightEntity> {
 
   @Override
   protected void announceEntity(LightEntity entity) {
-    LightEntityConfig entityConfig = new LightEntityConfig();
-    fillDefaults(entity, entityConfig);
-
     LightOptions options = entity.getOptions();
     if (options != null) {
+      LightEntityConfig entityConfig = new LightEntityConfig();
+      fillDefaults(entity, entityConfig);
+
       entityConfig.brightness = options.isDimmable();
       entityConfig.effectList = options.getEffects();
       entityConfig.effect = entityConfig.effectList != null && !entityConfig.effectList.isEmpty();
-    }
-    entityConfig.setStateTopic(entity.state().getTopic());
-    entityConfig.setCommandTopic(entity.command().getTopic());
+      entityConfig.setStateTopic(entity.state().getTopic());
+      entityConfig.setCommandTopic(entity.command().getTopic());
 
-    announceEntity(entityConfig);
+      announceEntity(entityConfig);
+    }
   }
 
   @Data

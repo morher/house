@@ -16,20 +16,20 @@ public class BinarySensorEntityAnnouncer extends BaseEntityAnnouncer<BinarySenso
 
   @Override
   protected void announceEntity(BinarySensorEntity entity) {
-    BinarySensorEntityConfig entityConfig = new BinarySensorEntityConfig();
-    fillDefaults(entity, entityConfig);
-
     BinarySensorOptions options = entity.getOptions();
     if (options != null) {
+      BinarySensorEntityConfig entityConfig = new BinarySensorEntityConfig();
+      fillDefaults(entity, entityConfig);
+
       entityConfig.setDeviceClass(options.getDeviceClass());
       if (options.getCategory() != null) {
         entityConfig.setEntityCategory(options.getCategory().name().toLowerCase());
       }
+
+      entityConfig.setStateTopic(entity.state().getTopic());
+
+      announceEntity(entityConfig);
     }
-
-    entityConfig.setStateTopic(entity.state().getTopic());
-
-    announceEntity(entityConfig);
   }
 
   @Data

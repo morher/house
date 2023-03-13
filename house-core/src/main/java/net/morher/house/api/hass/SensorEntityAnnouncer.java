@@ -26,21 +26,21 @@ public class SensorEntityAnnouncer extends BaseEntityAnnouncer<SensorEntity<?>> 
   @Override
   protected void announceEntity(SensorEntity rawEntity) {
     SensorEntity<?> entity = (SensorEntity<?>) rawEntity;
-    SensorEntityConfig entityConfig = new SensorEntityConfig();
-    fillDefaults(entity, entityConfig);
-
     SensorOptions options = entity.getOptions();
     if (options != null) {
+      SensorEntityConfig entityConfig = new SensorEntityConfig();
+      fillDefaults(entity, entityConfig);
+
       entityConfig.setDeviceClass(options.getDeviceClass());
       entityConfig.setUnit(unit(options.getUnit()));
       if (options.getCategory() != null) {
         entityConfig.setEntityCategory(options.getCategory().name().toLowerCase());
       }
+
+      entityConfig.setStateTopic(entity.state().getTopic());
+
+      announceEntity(entityConfig);
     }
-
-    entityConfig.setStateTopic(entity.state().getTopic());
-
-    announceEntity(entityConfig);
   }
 
   private String unit(String unit) {
