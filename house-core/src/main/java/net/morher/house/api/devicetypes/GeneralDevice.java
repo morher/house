@@ -28,6 +28,10 @@ public class GeneralDevice {
   public static final EntityDefinition<SensorEntity<Double>> DEVICE_BATTERY =
       new EntityDefinition<>("Device battery", (em, id) -> em.decimalSensorEntity(id));
 
+  /** A {@link SensorEntity} definition for reporting the internal device temperature. */
+  public static final EntityDefinition<SensorEntity<Double>> DEVICE_TEMPERATURE =
+      new EntityDefinition<>("Device temperature", (em, id) -> em.decimalSensorEntity(id));
+
   /**
    * A {@link SwitchEntity} definition for devices that can have their functionality enabled or
    * disabled, while it doesn't necessarily change the power status. It can also be used for virtual
