@@ -1,6 +1,7 @@
 package net.morher.house.api.devicetypes;
 
 import net.morher.house.api.entity.EntityDefinition;
+import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.sensor.SensorEntity;
 import net.morher.house.api.entity.switches.SwitchDefinition;
 import net.morher.house.api.entity.switches.SwitchEntity;
@@ -17,7 +18,7 @@ public class GeneralDevice {
    * A {@link TriggerEntity} definition for triggers such as button presses and motion detection.
    */
   public static final EntityDefinition<TriggerEntity> CONTROL =
-      new EntityDefinition<>("Control", (em, id) -> em.triggerEntity(id));
+      new EntityDefinition<>("Control", EntityManager::triggerEntity);
 
   /**
    * A {@link SensorEntity} definition for reporting device battery level. The battery level should
@@ -26,11 +27,11 @@ public class GeneralDevice {
    * <p>Examples: wireless sensors, wireless buttons.
    */
   public static final EntityDefinition<SensorEntity<Double>> DEVICE_BATTERY =
-      new EntityDefinition<>("Device battery", (em, id) -> em.decimalSensorEntity(id));
+      new EntityDefinition<>("Device battery", EntityManager::decimalSensorEntity);
 
   /** A {@link SensorEntity} definition for reporting the internal device temperature. */
   public static final EntityDefinition<SensorEntity<Double>> DEVICE_TEMPERATURE =
-      new EntityDefinition<>("Device temperature", (em, id) -> em.decimalSensorEntity(id));
+      new EntityDefinition<>("Device temperature", EntityManager::decimalSensorEntity);
 
   /**
    * A {@link SwitchEntity} definition for devices that can have their functionality enabled or
@@ -56,5 +57,5 @@ public class GeneralDevice {
    * <p>Examples: Battery charger state, Dishwasher status.
    */
   public static final EntityDefinition<SensorEntity<String>> STATUS =
-      new EntityDefinition<>("Status", (em, id) -> em.stringSensorEntity(id));
+      new EntityDefinition<>("Status", EntityManager::stringSensorEntity);
 }

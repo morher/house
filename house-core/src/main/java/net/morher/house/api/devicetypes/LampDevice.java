@@ -1,6 +1,7 @@
 package net.morher.house.api.devicetypes;
 
 import net.morher.house.api.entity.EntityDefinition;
+import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.light.LightEntity;
 
 /**
@@ -13,5 +14,5 @@ public abstract class LampDevice {
 
   /** The lamps primary light should be controlled with the {@link LightEntity} light. */
   public static final EntityDefinition<LightEntity> LIGHT =
-      new EntityDefinition<>("Light", (em, id) -> em.lightEntity(id));
+      new EntityDefinition<>("Light", EntityManager::lightEntity);
 }

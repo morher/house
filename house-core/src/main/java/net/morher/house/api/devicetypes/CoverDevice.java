@@ -1,6 +1,7 @@
 package net.morher.house.api.devicetypes;
 
 import net.morher.house.api.entity.EntityDefinition;
+import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.cover.CoverEntity;
 
 public class CoverDevice {
@@ -11,5 +12,5 @@ public class CoverDevice {
    * <p>Examples: Blinds, awnings, projector screens.
    */
   public static final EntityDefinition<CoverEntity> COVER =
-      new EntityDefinition<>("Cover", (em, id) -> em.coverEntity(id));
+      new EntityDefinition<>("Cover", EntityManager::coverEntity);
 }
