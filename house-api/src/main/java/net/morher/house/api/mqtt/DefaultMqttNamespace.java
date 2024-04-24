@@ -2,7 +2,6 @@ package net.morher.house.api.mqtt;
 
 import static java.util.Objects.requireNonNullElse;
 import static net.morher.house.api.mqtt.MqttNamespace.normalize;
-
 import lombok.AllArgsConstructor;
 import net.morher.house.api.entity.DeviceId;
 import net.morher.house.api.entity.EntityId;
@@ -50,6 +49,11 @@ public class DefaultMqttNamespace implements MqttNamespace {
   @Override
   public String entityPositionCommandTopic(EntityId entity) {
     return entityBaseTopic(entity) + "/position/command";
+  }
+
+  @Override
+  public String entitySoundRequestTopic(EntityId entityId) {
+    return entityBaseTopic(entityId) + "/sound";
   }
 
   public String entityStateTopic(EntityId entityId) {

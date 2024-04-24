@@ -12,5 +12,6 @@ The entity types are set up to line up with the entity types in Home Assistant.
 | Cover         | Window blinds, awning...             | [MQTT Cover](https://www.home-assistant.io/integrations/cover.mqtt/)                   |
 | Lights        | Lamps, LED-strips...                 | [MQTT Lights](https://www.home-assistant.io/integrations/light.mqtt/)                  |
 | Sensor        | Temperature sensors...               | [MQTT Sensor](https://www.home-assistant.io/integrations/sensor.mqtt/)                 |
+| Sound         | Speakers                             |                                                                                        |
 | Switch        | Devices that can be turned on or off | [MQTT Switches](https://www.home-assistant.io/integrations/switch.mqtt/)               |
 | Trigger       | Remote controls, buttons...          | [MQTT Device Trigger](https://www.home-assistant.io/integrations/device_trigger.mqtt/) |

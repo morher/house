@@ -5,6 +5,7 @@ import net.morher.house.api.entity.light.LightEntity;
 import net.morher.house.api.entity.number.DecimalEntity;
 import net.morher.house.api.entity.sensor.BinarySensorEntity;
 import net.morher.house.api.entity.sensor.SensorEntity;
+import net.morher.house.api.entity.sound.SoundEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
 import net.morher.house.api.entity.trigger.TriggerEntity;
 import net.morher.house.api.mqtt.client.HouseMqttClient;
@@ -52,6 +53,10 @@ public class EntityManager {
 
   public LightEntity lightEntity(EntityId entityId) {
     return new LightEntity(client, entityId, entityChanges.getDispatcher());
+  }
+
+  public SoundEntity soundEntity(EntityId entityId) {
+    return new SoundEntity(client, entityId, entityChanges.getDispatcher());
   }
 
   public SensorEntity<String> stringSensorEntity(EntityId entityId) {

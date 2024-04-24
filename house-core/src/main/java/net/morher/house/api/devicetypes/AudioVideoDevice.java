@@ -4,6 +4,7 @@ import net.morher.house.api.entity.EntityDefinition;
 import net.morher.house.api.entity.EntityManager;
 import net.morher.house.api.entity.number.DecimalEntity;
 import net.morher.house.api.entity.sensor.SensorEntity;
+import net.morher.house.api.entity.sound.SoundEntity;
 import net.morher.house.api.entity.switches.SwitchEntity;
 
 public class AudioVideoDevice {
@@ -30,4 +31,12 @@ public class AudioVideoDevice {
    */
   public static final EntityDefinition<DecimalEntity> VOLUME =
       new EntityDefinition<>("Volume", EntityManager::decimalEntity);
+
+  /**
+   * A {@link SoundEntity} definition for devices capable of playing named sounds.
+   *
+   * <p>Examples: RaspberryPIs
+   */
+  public static final EntityDefinition<SoundEntity> SOUND_COMMAND =
+      new EntityDefinition<>("Sound command", EntityManager::soundEntity);
 }

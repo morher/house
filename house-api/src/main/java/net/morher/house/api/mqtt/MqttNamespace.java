@@ -23,6 +23,8 @@ public interface MqttNamespace {
 
   String entityPositionCommandTopic(EntityId entityId);
 
+  String entitySoundRequestTopic(EntityId entityId);
+
   String entityStateTopic(EntityId entityId);
 
   String entityTiltTopic(EntityId entityId);
